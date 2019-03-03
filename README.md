@@ -1,4 +1,5 @@
 **MRVNLFG - MRVNBot**
+
 A bot used to create instant invites into voice channels with a simple command.
 This bot is currently rather hard-coded for the Apex Legends Discord server, but this will change in the future!
 
