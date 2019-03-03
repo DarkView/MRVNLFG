@@ -22,7 +22,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  *
- * @author Nils
+ * @author Nils Blömeke
  */
 public class Core {
 
@@ -38,7 +38,7 @@ public class Core {
         builder.setToken(Vars.TOKEN);
         builder.setAutoReconnect(true);
         builder.setContextEnabled(true);
-        builder.setGame(Game.playing("!lfg"));
+        builder.setGame(Game.playing("!"+Vars.COMMAND_IDENTIFIER));
 
         bot = builder.buildBlocking();
         LFGHandler.loadVoiceChannels(bot.getVoiceChannels());
@@ -47,19 +47,36 @@ public class Core {
         outInfo("Done loading! [" + LocalTime.now().toString() + "]");
     }
 
+    /**
+     * Used to add the listeners to the running bot
+     */
     private static void addListeners() {
         bot.addEventListener(new MessageListener());
         bot.addEventListener(new VoiceListener());
     }
     
+    /**
+     * Sends a public message to the channel
+     * @param msg - The message to send
+     * @param channel  - The channel in which to send the message
+     */
     public static void sendMessageToChannel(String msg, MessageChannel channel) {
         channel.sendMessage(msg).queue();
     }
     
+    /**
+     * Deletes a specific {@link net.dv8tion.jda.core.entities.Message Message}
+     * @param msg - The Message to be deleted
+     */
     public static void deleteMessage(Message msg) {
         msg.delete().queue();
     }
 
+    /**
+     * Uses the log4j binding to output a message and the Exceptions stacktrace if an Exception is present
+     * @param message - The message to be logged
+     * @param ex - The Exception to be traced. Can be null
+     */
     public static void outError(String message, RateLimitedException ex) {
         if (ex == null) {
             LOGGER.error(message);
@@ -68,14 +85,28 @@ public class Core {
         }
     }
     
+    /**
+     * Outputs a message through the log4j binding
+     * @param message - The message to be logged
+     */
     public static void outInfo(String message) {
         LOGGER.info(message);
     }
     
+    /**
+     * Logs a specific message accompanied by the users name and snowflake
+     * @param u - The user to be logged alongside the message, in this case the one that executed the request
+     * @param message - The message to log
+     */
     public static void outLFGInfo(User u, String message) {
         LOGGER.info(userInfo(u) + " | " + message);
     }
 
+    /**
+     * Formats a users information for logging
+     * @param u - The user for which we want the formatted information
+     * @return - String - The formatted information
+     */
     public static String userInfo(User u) {
         String uInf;
         

@@ -152,3 +152,19 @@
 2019-03-03 01:25:53.051 INFO [main] [de.darkdl.mrvnbot.Core] [outInfo] [de.darkdl.mrvnbot.Core.outInfo(Core.java:72)] - Done loading! [01:25:53.051721300]
 2019-03-03 01:26:47.576 INFO [JDA MainWS-ReadThread] [de.darkdl.mrvnbot.Core] [outLFGInfo] [de.darkdl.mrvnbot.Core.outLFGInfo(Core.java:76)] - Dark#1010 (108552944961454080) | Started LFG request in eu-lfg-pc
 2019-03-03 01:26:47.730 INFO [JDA MainWS-ReadThread] [de.darkdl.mrvnbot.Core] [outLFGInfo] [de.darkdl.mrvnbot.Core.outLFGInfo(Core.java:76)] - Dark#1010 (108552944961454080) | Succesfully completed LFG request
+2019-03-03 01:59:38.731 INFO [main] [de.darkdl.mrvnbot.Core] [outInfo] [de.darkdl.mrvnbot.Core.outInfo(Core.java:93)] - Starting up... [01:59:38.729558]
+2019-03-03 01:59:39.971 INFO [main] [de.darkdl.mrvnbot.Core] [outInfo] [de.darkdl.mrvnbot.Core.outInfo(Core.java:93)] - Loaded voice channels
+2019-03-03 01:59:39.973 INFO [main] [de.darkdl.mrvnbot.Core] [outInfo] [de.darkdl.mrvnbot.Core.outInfo(Core.java:93)] - Done loading! [01:59:39.973759500]
+2019-03-03 01:59:42.504 INFO [JDA MainWS-ReadThread] [de.darkdl.mrvnbot.Core] [outLFGInfo] [de.darkdl.mrvnbot.Core.outLFGInfo(Core.java:102)] - <@108552944961454080>#1010 (108552944961454080) | Started LFG request in eu-lfg-pc
+2019-03-03 01:59:42.510 INFO [JDA MainWS-ReadThread] [de.darkdl.mrvnbot.Core] [outLFGInfo] [de.darkdl.mrvnbot.Core.outLFGInfo(Core.java:102)] - <@108552944961454080>#1010 (108552944961454080) | Stopped LFG request, user is not in a channel
+2019-03-03 02:09:10.484 INFO [main] [de.darkdl.mrvnbot.Core] [outInfo] [de.darkdl.mrvnbot.Core.outInfo(Core.java:93)] - Starting up... [02:09:10.481115700]
+2019-03-03 02:09:11.709 INFO [main] [de.darkdl.mrvnbot.Core] [outInfo] [de.darkdl.mrvnbot.Core.outInfo(Core.java:93)] - Loaded voice channels
+2019-03-03 02:09:11.711 INFO [main] [de.darkdl.mrvnbot.Core] [outInfo] [de.darkdl.mrvnbot.Core.outInfo(Core.java:93)] - Done loading! [02:09:11.711857900]
+2019-03-03 02:09:18.003 INFO [JDA MainWS-ReadThread] [de.darkdl.mrvnbot.Core] [outLFGInfo] [de.darkdl.mrvnbot.Core.outLFGInfo(Core.java:102)] - Dark#1010 (108552944961454080) | Started LFG request in eu-lfg-pc
+2019-03-03 02:09:18.158 INFO [JDA MainWS-ReadThread] [de.darkdl.mrvnbot.Core] [outLFGInfo] [de.darkdl.mrvnbot.Core.outLFGInfo(Core.java:102)] - Dark#1010 (108552944961454080) | Succesfully completed LFG request
+2019-03-03 02:09:24.370 INFO [JDA MainWS-ReadThread] [de.darkdl.mrvnbot.Core] [outLFGInfo] [de.darkdl.mrvnbot.Core.outLFGInfo(Core.java:102)] - Dark#1010 (108552944961454080) | Started LFG request in eu-lfg-pc
+2019-03-03 02:09:24.523 INFO [JDA MainWS-ReadThread] [de.darkdl.mrvnbot.Core] [outLFGInfo] [de.darkdl.mrvnbot.Core.outLFGInfo(Core.java:102)] - Dark#1010 (108552944961454080) | Succesfully completed LFG request
+2019-03-03 02:09:47.468 INFO [JDA MainWS-ReadThread] [de.darkdl.mrvnbot.Core] [outLFGInfo] [de.darkdl.mrvnbot.Core.outLFGInfo(Core.java:102)] - Dark#1010 (108552944961454080) | Started LFG request in na-pc-lfg
+2019-03-03 02:09:47.627 INFO [JDA MainWS-ReadThread] [de.darkdl.mrvnbot.Core] [outLFGInfo] [de.darkdl.mrvnbot.Core.outLFGInfo(Core.java:102)] - Dark#1010 (108552944961454080) | Succesfully completed LFG request
+2019-03-03 02:09:51.803 INFO [JDA MainWS-ReadThread] [de.darkdl.mrvnbot.Core] [outLFGInfo] [de.darkdl.mrvnbot.Core.outLFGInfo(Core.java:102)] - Dark#1010 (108552944961454080) | Started LFG request in eu-lfg-pc
+2019-03-03 02:09:51.941 INFO [JDA MainWS-ReadThread] [de.darkdl.mrvnbot.Core] [outLFGInfo] [de.darkdl.mrvnbot.Core.outLFGInfo(Core.java:102)] - Dark#1010 (108552944961454080) | Succesfully completed LFG request

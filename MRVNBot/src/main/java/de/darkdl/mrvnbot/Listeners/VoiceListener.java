@@ -15,30 +15,39 @@ import net.dv8tion.jda.core.events.guild.voice.GuildVoiceMoveEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
 
 /**
- *
- * @author Nils
+ * VoiceListener with the 3 relevant events for knowing which channel a user is in
+ * @author Nils Blömeke
  */
 public class VoiceListener extends ListenerAdapter {
 
+    /**
+     * Calls for an overwrite/add of the user and his channel if it matches the identifier for channels
+     * @param evt - The event passed on by JDA
+     */
     @Override
     public void onGuildVoiceJoin(GuildVoiceJoinEvent evt) {
         
         User u = evt.getMember().getUser();
         VoiceChannel c = evt.getChannelJoined();
 
-        if (c.getName().toLowerCase().contains(Vars.TEAM_VOICE_IDENTIFIER)) {
+        if (c.getName().toLowerCase().contains(Vars.LFG_VOICE_IDENTIFIER)) {
             LFGHandler.userConnected(u.getId(), c);
         }
         
     }
 
+    /**
+     * Calls for an overwrite/add on the users associated channel if his new channel passes the voice identifiert
+     * Else, it removes the user and its association from the list as he left the LFG voice channels and we dont allow LFGs there
+     * @param evt - The event passed on by JDA
+     */
     @Override
     public void onGuildVoiceMove(GuildVoiceMoveEvent evt) {
         
         User u = evt.getMember().getUser();
         VoiceChannel c = evt.getChannelJoined();
 
-        if (c.getName().toLowerCase().contains(Vars.TEAM_VOICE_IDENTIFIER)) {
+        if (c.getName().toLowerCase().contains(Vars.LFG_VOICE_IDENTIFIER)) {
             LFGHandler.userConnected(u.getId(), c);
         } else {
             LFGHandler.userDisconnected(u.getId());
@@ -46,6 +55,10 @@ public class VoiceListener extends ListenerAdapter {
         
     }
 
+    /**
+     * Calls for removal of the user from the Map, even if they were not in the LFG channels anymore
+     * @param evt - The event passed on by JDA
+     */
     @Override
     public void onGuildVoiceLeave(GuildVoiceLeaveEvent evt) {
 

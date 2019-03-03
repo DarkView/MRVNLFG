@@ -16,21 +16,37 @@ import net.dv8tion.jda.core.entities.VoiceChannel;
 import net.dv8tion.jda.core.exceptions.RateLimitedException;
 
 /**
- *
- * @author Nils
+ * The main class used for dealing with the LFG requests
+ * @author Nils Blömeke
  */
 public class LFGHandler {
 
     private static final HashMap<String, VoiceChannel> CONNECTED_USERS = new HashMap<String, VoiceChannel>();
 
+    /**
+     * Adds or overwrites the users current voice channel
+     * @param userID - The snowflake of the user for which the association is to be added or overwritten
+     * @param channel - The VoiceChannel object the user is currently in
+     */
     public static void userConnected(String userID, VoiceChannel channel) {
         CONNECTED_USERS.put(userID, channel);
     }
 
+    /**
+     * Removes a user and its association from the Map
+     * @param userID - The user that is to be removed
+     */
     public static void userDisconnected(String userID) {
         CONNECTED_USERS.remove(userID);
     }
 
+    /**
+     * Handles the creation of the message and the invite to the channel the user is in
+     * If the channel already has a direct invite it is reused.
+     * Also cancels if the user is either not in a channel or it is full
+     * @param msg - The message the user sent to initiate the processing
+     * @param channel - The channel in which the message was sent
+     */
     public static void createLFG(Message msg, MessageChannel channel) {
 
         User user = msg.getAuthor();
@@ -42,7 +58,7 @@ public class LFGHandler {
 
                 try {
 
-                    String msgContent = msg.getContentStripped().replaceFirst("(?i)!?lfg", "");
+                    String msgContent = msg.getContentStripped().replaceFirst("(?i)!?"+Vars.COMMAND_IDENTIFIER, "");
 
                     if (!msgContent.equals("")) {
                         msgContent = "```".concat(msgContent.trim()).concat("```");
@@ -85,6 +101,10 @@ public class LFGHandler {
 
     }
 
+    /**
+     * Used to load all the visible Channels and its members into the Map on startup
+     * @param channels - A list of all channels to be loaded
+     */
     static void loadVoiceChannels(List<VoiceChannel> channels) {
 
         for (VoiceChannel c : channels) {
