@@ -14,13 +14,16 @@ import net.dv8tion.jda.core.hooks.ListenerAdapter;
 
 /**
  * Standard MessageListener
+ *
  * @author Nils Blömeke
  */
 public class MessageListener extends ListenerAdapter {
 
     /**
-     * Upon receiving a message, we check it for validity against the command identifier
-     * Everything else is handled by the LFGHandler if the message is in fact a LFG message
+     * Upon receiving a message, we check it for validity against the command
+     * identifier Everything else is handled by the LFGHandler if the message is
+     * in fact a LFG message
+     *
      * @param evt - The event passed on by JDA
      */
     @Override
@@ -29,8 +32,7 @@ public class MessageListener extends ListenerAdapter {
         String msgContent = msg.getContentStripped().trim();
 
         if (msg.getChannel().getName().contains(Vars.COMMAND_IDENTIFIER)
-                && (msgContent.toLowerCase().startsWith("!" + Vars.COMMAND_IDENTIFIER)
-                || msgContent.toLowerCase().startsWith(Vars.COMMAND_IDENTIFIER))) {
+                && msgContent.toLowerCase().startsWith("!" + Vars.COMMAND_IDENTIFIER)) {
 
             Core.outLFGInfo(msg.getAuthor(), "Started LFG request in " + msg.getChannel().getName());
             LFGHandler.createLFG(msg, msg.getChannel());
