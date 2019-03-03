@@ -11,9 +11,10 @@ package de.darkdl.mrvnbot;
  */
 public class Vars {
 
-    static String TOKEN = "";
-    public static String LFG_VOICE_IDENTIFIER = "team";
-    public static String LFG_TEXT_IDENTIFIERT = "team"; //These variables must be lowercase since we convert the Strings to lowercase for the checks
-    public static String COMMAND_IDENTIFIER = "lfg";
+    public String OWNER_ID = "";
+    public String TOKEN = "";
+    public String LFG_VOICE_IDENTIFIER = "";
+    public String LFG_TEXT_IDENTIFIERT = ""; //These variables must be lowercase since we convert the Strings to lowercase for the checks
+    public String COMMAND_IDENTIFIER = "";
     
 }

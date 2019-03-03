@@ -168,3 +168,9 @@
 2019-03-03 02:09:47.627 INFO [JDA MainWS-ReadThread] [de.darkdl.mrvnbot.Core] [outLFGInfo] [de.darkdl.mrvnbot.Core.outLFGInfo(Core.java:102)] - Dark#1010 (108552944961454080) | Succesfully completed LFG request
 2019-03-03 02:09:51.803 INFO [JDA MainWS-ReadThread] [de.darkdl.mrvnbot.Core] [outLFGInfo] [de.darkdl.mrvnbot.Core.outLFGInfo(Core.java:102)] - Dark#1010 (108552944961454080) | Started LFG request in eu-lfg-pc
 2019-03-03 02:09:51.941 INFO [JDA MainWS-ReadThread] [de.darkdl.mrvnbot.Core] [outLFGInfo] [de.darkdl.mrvnbot.Core.outLFGInfo(Core.java:102)] - Dark#1010 (108552944961454080) | Succesfully completed LFG request
+2019-03-03 15:06:17.409 INFO [main] [de.darkdl.mrvnbot.Core] [outInfo] [de.darkdl.mrvnbot.Core.outInfo(Core.java:94)] - Starting up... [15:06:17.402]
+2019-03-03 15:06:18.991 INFO [main] [de.darkdl.mrvnbot.Core] [outInfo] [de.darkdl.mrvnbot.Core.outInfo(Core.java:94)] - Loaded voice channels
+2019-03-03 15:06:18.993 INFO [main] [de.darkdl.mrvnbot.Core] [outInfo] [de.darkdl.mrvnbot.Core.outInfo(Core.java:94)] - Done loading! [15:06:18.993]
+2019-03-03 15:15:45.439 INFO [main] [de.darkdl.mrvnbot.Core] [outInfo] [de.darkdl.mrvnbot.Core.outInfo(Core.java:96)] - Starting up... [15:15:45.434]
+2019-03-03 15:15:47.996 INFO [main] [de.darkdl.mrvnbot.Core] [outInfo] [de.darkdl.mrvnbot.Core.outInfo(Core.java:96)] - Loaded voice channels
+2019-03-03 15:15:47.998 INFO [main] [de.darkdl.mrvnbot.Core] [outInfo] [de.darkdl.mrvnbot.Core.outInfo(Core.java:96)] - Done loading! [15:15:47.998]

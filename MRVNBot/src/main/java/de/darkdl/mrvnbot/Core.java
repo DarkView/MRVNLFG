@@ -16,7 +16,6 @@ import net.dv8tion.jda.core.entities.Game;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.MessageChannel;
 import net.dv8tion.jda.core.entities.User;
-import net.dv8tion.jda.core.exceptions.RateLimitedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,17 +27,19 @@ public class Core {
 
     private static JDABuilder builder;
     private static JDA bot;
+    public static Vars VARS = new Vars();
     private static final Logger LOGGER = LoggerFactory.getLogger(Core.class);
 
     public static void main(String[] args) throws LoginException, InterruptedException {
         outInfo("Starting up... [" + LocalTime.now().toString() + "]");
+        VARS = VarsJSON.deserialize();
 
         builder = new JDABuilder(AccountType.BOT);
 
-        builder.setToken(Vars.TOKEN);
+        builder.setToken(VARS.TOKEN);
         builder.setAutoReconnect(true);
         builder.setContextEnabled(true);
-        builder.setGame(Game.playing("!"+Vars.COMMAND_IDENTIFIER));
+        builder.setGame(Game.playing("!"+VARS.COMMAND_IDENTIFIER));
 
         bot = builder.buildBlocking();
         LFGHandler.loadVoiceChannels(bot.getVoiceChannels());
@@ -77,7 +78,7 @@ public class Core {
      * @param message - The message to be logged
      * @param ex - The Exception to be traced. Can be null
      */
-    public static void outError(String message, RateLimitedException ex) {
+    public static void outError(String message, Exception ex) {
         if (ex == null) {
             LOGGER.error(message);
         } else {
@@ -113,6 +114,10 @@ public class Core {
         uInf = "" + u.getName() + "#" + u.getDiscriminator() + " (" + u.getId() + ")";
         
         return uInf;
+    }
+    
+    public static void updateVars() {
+        VARS = VarsJSON.deserialize();
     }
     
 }

@@ -5,6 +5,7 @@
  */
 package de.darkdl.mrvnbot.Listeners;
 
+import de.darkdl.mrvnbot.Core;
 import de.darkdl.mrvnbot.LFGHandler;
 import de.darkdl.mrvnbot.Vars;
 import net.dv8tion.jda.core.entities.User;
@@ -30,7 +31,7 @@ public class VoiceListener extends ListenerAdapter {
         User u = evt.getMember().getUser();
         VoiceChannel c = evt.getChannelJoined();
 
-        if (c.getName().toLowerCase().contains(Vars.LFG_VOICE_IDENTIFIER)) {
+        if (c.getName().toLowerCase().contains(Core.VARS.LFG_VOICE_IDENTIFIER)) {
             LFGHandler.userConnected(u.getId(), c);
         }
         
@@ -47,7 +48,7 @@ public class VoiceListener extends ListenerAdapter {
         User u = evt.getMember().getUser();
         VoiceChannel c = evt.getChannelJoined();
 
-        if (c.getName().toLowerCase().contains(Vars.LFG_VOICE_IDENTIFIER)) {
+        if (c.getName().toLowerCase().contains(Core.VARS.LFG_VOICE_IDENTIFIER)) {
             LFGHandler.userConnected(u.getId(), c);
         } else {
             LFGHandler.userDisconnected(u.getId());

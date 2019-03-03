@@ -58,7 +58,7 @@ public class LFGHandler {
 
                 try {
 
-                    String msgContent = msg.getContentStripped().replaceFirst("(?i)!?"+Vars.COMMAND_IDENTIFIER, "");
+                    String msgContent = msg.getContentStripped().replaceFirst("(?i)!?"+Core.VARS.COMMAND_IDENTIFIER, "");
 
                     if (!msgContent.equals("")) {
                         msgContent = "```".concat(msgContent.trim()).concat("```");
