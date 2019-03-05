@@ -35,6 +35,11 @@ public class Core {
         VARS = VarsJSON.deserialize();
         VARS.allToLowerCase();
 
+        if (VARS.TOKEN.equals("")) {
+            outInfo("There is no token in the settings.json! Stopping...");
+            System.exit(0);
+        }
+        
         builder = new JDABuilder(AccountType.BOT);
 
         builder.setToken(VARS.TOKEN);
@@ -120,6 +125,11 @@ public class Core {
     public static void updateVars() {
         VARS = VarsJSON.deserialize();
         VARS.allToLowerCase();
+    }
+
+    static void createVarsFile() {
+        VARS = new Vars();
+        VarsJSON.serialize(VARS);
     }
     
 }

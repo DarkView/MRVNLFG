@@ -14,32 +14,38 @@ import java.io.IOException;
  * @author Nils
  */
 public class VarsJSON {
-    
+
+    private static final File FILE = new File("settings.json");
+
     public static void serialize(Vars v) {
-        
+
         ObjectMapper mapper = new ObjectMapper();
-        
+
         try {
-            
-            mapper.writerWithDefaultPrettyPrinter().writeValue(new File("settings.json"), v);
-            
+
+            mapper.writerWithDefaultPrettyPrinter().writeValue(FILE, v);
+
         } catch (IOException e) {
-            
+
         }
-        
+
     }
-    
+
     public static Vars deserialize() {
-        
+
         ObjectMapper mapper = new ObjectMapper();
-        
+
         try {
-            return mapper.readValue(new File("settings.json"), Vars.class);
+            if (!FILE.exists()) {
+                Core.outInfo("Creating the " + FILE.getName() + " file if it does not exist!");
+                Core.createVarsFile();
+            }
+            return mapper.readValue(FILE, Vars.class);
         } catch (IOException ex) {
             Core.outError(ex.getMessage(), ex);
         }
-        
+
         return null;
     }
-    
+
 }
