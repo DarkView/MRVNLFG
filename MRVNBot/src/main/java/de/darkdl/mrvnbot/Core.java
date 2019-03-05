@@ -7,7 +7,9 @@ package de.darkdl.mrvnbot;
 
 import de.darkdl.mrvnbot.Listeners.MessageListener;
 import de.darkdl.mrvnbot.Listeners.VoiceListener;
-import java.time.LocalTime;
+import de.darkdl.mrvnbot.commands.CMDReload;
+import de.darkdl.mrvnbot.commands.CMDUpdateVar;
+import de.darkdl.mrvnbot.commands.CommandHandler;
 import javax.security.auth.login.LoginException;
 import net.dv8tion.jda.core.AccountType;
 import net.dv8tion.jda.core.JDA;
@@ -31,12 +33,13 @@ public class Core {
     private static final Logger LOGGER = LoggerFactory.getLogger(Core.class);
 
     public static void main(String[] args) throws LoginException, InterruptedException {
-        outInfo("Starting up... [" + LocalTime.now().toString() + "]");
+        outInfo("Starting up...");
+        long startTime = System.currentTimeMillis();
         VARS = VarsJSON.deserialize();
         VARS.allToLowerCase();
         outInfo("Loaded the config");
 
-        if (VARS.TOKEN.equals("")) {
+        if (VARS.TOKEN.equals("") || VARS.TOKEN == null) {
             outInfo("There is no token in the settings.json! Stopping...");
             System.exit(0);
         }
@@ -46,13 +49,14 @@ public class Core {
         builder.setToken(VARS.TOKEN);
         builder.setAutoReconnect(true);
         builder.setContextEnabled(true);
-        builder.setGame(Game.playing("!"+VARS.COMMAND_IDENTIFIER));
+        builder.setGame(Game.playing(VARS.LFG_COMMAND_IDENTIFIER));
 
         bot = builder.buildBlocking();
         LFGHandler.loadVoiceChannels(bot.getVoiceChannels());
         addListeners();
+        addCommands();
 
-        outInfo("Done loading! [" + LocalTime.now().toString() + "]");
+        outInfo("Done loading! [Took " + (System.currentTimeMillis() - startTime) + "ms]");
     }
 
     /**
@@ -61,6 +65,14 @@ public class Core {
     private static void addListeners() {
         bot.addEventListener(new MessageListener());
         bot.addEventListener(new VoiceListener());
+    }
+    
+    /**
+     * Used to add the commands to the running bot
+     */
+    private static void addCommands() {
+        CommandHandler.commands.put("reload", new CMDReload());
+        CommandHandler.commands.put("updatevar", new CMDUpdateVar());
     }
     
     /**
@@ -130,6 +142,10 @@ public class Core {
 
     static void createVarsFile() {
         VARS = new Vars();
+        VarsJSON.serialize(VARS);
+    }
+
+    public static void saveVars() {
         VarsJSON.serialize(VARS);
     }
     

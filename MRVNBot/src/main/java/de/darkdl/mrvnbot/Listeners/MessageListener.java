@@ -5,6 +5,8 @@
  */
 package de.darkdl.mrvnbot.Listeners;
 
+import de.darkdl.mrvnbot.commands.CommandHandler;
+import de.darkdl.mrvnbot.commands.CommandParser;
 import de.darkdl.mrvnbot.Core;
 import de.darkdl.mrvnbot.LFGHandler;
 import net.dv8tion.jda.core.entities.Message;
@@ -31,18 +33,14 @@ public class MessageListener extends ListenerAdapter {
         String msgContent = msg.getContentStripped().trim();
 
         if (msg.getChannel().getName().contains(Core.VARS.LFG_TEXT_IDENTIFIER)
-                && msgContent.toLowerCase().startsWith(Core.VARS.COMMAND_IDENTIFIER)) {
+                && msgContent.toLowerCase().startsWith(Core.VARS.LFG_COMMAND_IDENTIFIER)) {
 
             Core.outLFGInfo(msg.getAuthor(), "Started LFG request in " + msg.getChannel().getName());
             LFGHandler.createLFG(msg, msg.getChannel());
 
-        } else if (msgContent.equals("!reload") && Core.VARS.isOwner(msg.getAuthor().getId())) {
+        } else if (msgContent.startsWith(Core.VARS.CMD_PREFIX) && Core.VARS.isOwner(msg.getAuthor().getId())) {
 
-            msg.delete().queue();
-            Core.sendMessageToChannel("*Reloading config...*", msg.getChannel());
-            Core.updateVars();
-            Core.sendMessageToChannel("*Reloaded!*", msg.getChannel());
-            Core.outLFGInfo(msg.getAuthor(), "Reloaded the config");
+            CommandHandler.handleCommand(CommandParser.parser(msg.getContentDisplay(), evt));
 
         }
 

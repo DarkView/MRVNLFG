@@ -5,7 +5,6 @@
  */
 package de.darkdl.mrvnbot;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -15,16 +14,17 @@ import java.util.List;
 public class Vars {
 
     public List<String> OWNER_IDS;
+    public String CMD_PREFIX = "";
     public String TOKEN = "";
     public String LFG_VOICE_IDENTIFIER = "";
     public String LFG_TEXT_IDENTIFIER = ""; //These variables must be lowercase since we convert the Strings to lowercase for the checks
-    public String COMMAND_IDENTIFIER = "";
+    public String LFG_COMMAND_IDENTIFIER = "";
     public boolean LIST_OTHER_USERS = true;
     
     public void allToLowerCase() {
         LFG_VOICE_IDENTIFIER = LFG_VOICE_IDENTIFIER.toLowerCase();
         LFG_TEXT_IDENTIFIER = LFG_TEXT_IDENTIFIER.toLowerCase();
-        COMMAND_IDENTIFIER = COMMAND_IDENTIFIER.toLowerCase();
+        LFG_COMMAND_IDENTIFIER = LFG_COMMAND_IDENTIFIER.toLowerCase();
     }
     
     public boolean isOwner(String userID) {
