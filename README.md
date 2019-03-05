@@ -8,9 +8,7 @@ Be sure to change the variables in the settings.json file.
  - OWNER_ID: The user that is allowed to control the bot. Currently only used for the !reload command
  - TOKEN: The bot accounts token, find it [here](https://discordapp.com/developers/applications/)
  - LFG_VOICE_IDENTIFIER: Text used to identify the voice channels for which the LFG command should work
- - LFG_TEXT_IDENTIFIERT: Text used to identify the text channels in whicha the LFG command can be executed (Currently has a spelling error)
+ - LFG_TEXT_IDENTIFIER: Text used to identify the text channels in which the LFG command can be executed
  - COMMAND_IDENTIFIER: The exact text used to identify the command
- 
-All of the identifiers need to be in all lower-case letters, as the message and names get converted to lower-case automatically (this will likely change in the future)
 
 This Discord bot requires Java 8 and uses [JDA](https://github.com/DV8FromTheWorld/JDA)

@@ -33,6 +33,7 @@ public class Core {
     public static void main(String[] args) throws LoginException, InterruptedException {
         outInfo("Starting up... [" + LocalTime.now().toString() + "]");
         VARS = VarsJSON.deserialize();
+        VARS.allToLowerCase();
 
         builder = new JDABuilder(AccountType.BOT);
 
@@ -118,6 +119,7 @@ public class Core {
     
     public static void updateVars() {
         VARS = VarsJSON.deserialize();
+        VARS.allToLowerCase();
     }
     
 }

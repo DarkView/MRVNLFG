@@ -30,8 +30,8 @@ public class MessageListener extends ListenerAdapter {
         Message msg = evt.getMessage();
         String msgContent = msg.getContentStripped().trim();
 
-        if (msg.getChannel().getName().contains(Core.VARS.LFG_TEXT_IDENTIFIERT)
-                && msgContent.toLowerCase().startsWith("!" + Core.VARS.COMMAND_IDENTIFIER)) {
+        if (msg.getChannel().getName().contains(Core.VARS.LFG_TEXT_IDENTIFIER)
+                && msgContent.toLowerCase().startsWith(Core.VARS.COMMAND_IDENTIFIER)) {
 
             Core.outLFGInfo(msg.getAuthor(), "Started LFG request in " + msg.getChannel().getName());
             LFGHandler.createLFG(msg, msg.getChannel());
