@@ -19,6 +19,7 @@ Public commands for this bot:
  
 Commands only usable by the owners defined in the settings.json:
 - reload: Reloads the settings.json
+- listvar: Lists all the vars that can be updated via the command below
 - updatevar <var_name> \<input\>: Updates the var with the specified name to the given input. For booleans, [true, t, 1] result in true, anything else in false
 
 This Discord bot requires Java 8 and uses [JDA](https://github.com/DV8FromTheWorld/JDA)
