@@ -1,6 +1,12 @@
 
-MRVNBot/target/
-
 MRVNBot/TOKENS\.txt
 
 TOKENS\.txt
+
+MRVNBot/target/classes/
+
+MRVNBot/target/maven-archiver/
+
+MRVNBot/target/original-MRVNBot-1\.1\.jar
+
+MRVNBot/target/test-classes/
