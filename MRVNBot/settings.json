@@ -1,7 +1,8 @@
 {
-  "OWNER_ID" : "108552944961454080",
+  "OWNER_IDS" : [ "108552944961454080" ],
   "TOKEN" : "",
   "LFG_VOICE_IDENTIFIER" : "team",
   "LFG_TEXT_IDENTIFIER" : "lfg",
-  "COMMAND_IDENTIFIER" : "!lfg"
+  "COMMAND_IDENTIFIER" : "!lfg",
+  "LIST_OTHER_USERS" : true
 }

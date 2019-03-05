@@ -27,13 +27,14 @@ public class Core {
 
     private static JDABuilder builder;
     private static JDA bot;
-    public static Vars VARS = new Vars();
+    public static Vars VARS;
     private static final Logger LOGGER = LoggerFactory.getLogger(Core.class);
 
     public static void main(String[] args) throws LoginException, InterruptedException {
         outInfo("Starting up... [" + LocalTime.now().toString() + "]");
         VARS = VarsJSON.deserialize();
         VARS.allToLowerCase();
+        outInfo("Loaded the config");
 
         if (VARS.TOKEN.equals("")) {
             outInfo("There is no token in the settings.json! Stopping...");

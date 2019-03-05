@@ -17,6 +17,7 @@ import net.dv8tion.jda.core.exceptions.RateLimitedException;
 
 /**
  * The main class used for dealing with the LFG requests
+ *
  * @author Nils Blömeke
  */
 public class LFGHandler {
@@ -25,7 +26,9 @@ public class LFGHandler {
 
     /**
      * Adds or overwrites the users current voice channel
-     * @param userID - The snowflake of the user for which the association is to be added or overwritten
+     *
+     * @param userID - The snowflake of the user for which the association is to
+     * be added or overwritten
      * @param channel - The VoiceChannel object the user is currently in
      */
     public static void userConnected(String userID, VoiceChannel channel) {
@@ -34,6 +37,7 @@ public class LFGHandler {
 
     /**
      * Removes a user and its association from the Map
+     *
      * @param userID - The user that is to be removed
      */
     public static void userDisconnected(String userID) {
@@ -41,9 +45,10 @@ public class LFGHandler {
     }
 
     /**
-     * Handles the creation of the message and the invite to the channel the user is in
-     * If the channel already has a direct invite it is reused.
-     * Also cancels if the user is either not in a channel or it is full
+     * Handles the creation of the message and the invite to the channel the
+     * user is in If the channel already has a direct invite it is reused. Also
+     * cancels if the user is either not in a channel or it is full
+     *
      * @param msg - The message the user sent to initiate the processing
      * @param channel - The channel in which the message was sent
      */
@@ -54,31 +59,18 @@ public class LFGHandler {
         if (CONNECTED_USERS.containsKey(user.getId())) {
 
             VoiceChannel vc = CONNECTED_USERS.get(user.getId());
-            if (vc.getMembers().size() < vc.getUserLimit()) {
+            int vcMembers = vc.getMembers().size();
+            if (vcMembers < vc.getUserLimit()) {
 
                 try {
 
-                    String msgContent = msg.getContentStripped().replaceFirst("(?i)!?"+Core.VARS.COMMAND_IDENTIFIER, "");
+                    String msgContent = msg.getContentStripped().replaceFirst("(?i)!?" + Core.VARS.COMMAND_IDENTIFIER, "");
 
                     if (!msgContent.equals("")) {
                         msgContent = "```".concat(msgContent.trim()).concat("```");
                     }
 
-                    List<Invite> invites = vc.getInvites().complete(true);
-                    String channelInfo;
-
-                    if (!invites.isEmpty()) {
-
-                        channelInfo = "Join " + user.getAsMention() + " in "
-                                + vc.getName() + " via " + invites.get(0).getURL() + "\n";
-
-                    } else {
-
-                        Invite inv = vc.createInvite().complete(true);
-                        channelInfo = "Join " + user.getAsMention() + " in "
-                                + vc.getName() + " via " + inv.getURL() + "\n";
-
-                    }
+                    String channelInfo = handleMessageCreation(vc, user);
 
                     msgContent = channelInfo.concat(msgContent);
                     Core.sendMessageToChannel(msgContent, channel);
@@ -102,7 +94,9 @@ public class LFGHandler {
     }
 
     /**
-     * Used to load all the visible Channels and its members into the Map on startup
+     * Used to load all the visible Channels and its members into the Map on
+     * startup
+     *
      * @param channels - A list of all channels to be loaded
      */
     static void loadVoiceChannels(List<VoiceChannel> channels) {
@@ -120,6 +114,42 @@ public class LFGHandler {
 
         Core.outInfo("Loaded voice channels");
 
+    }
+
+    private static String handleMessageCreation(VoiceChannel vc, User user) throws RateLimitedException {
+
+        String channelInfo;
+        Invite inv;
+        List<Invite> invites = vc.getInvites().complete(true);
+
+        if (!invites.isEmpty()) {
+            inv = invites.get(0);
+        } else {
+            inv = vc.createInvite().complete(true);
+        }
+
+        channelInfo = "Join " + user.getAsMention();
+
+        if (Core.VARS.LIST_OTHER_USERS) {
+
+            List<Member> members = vc.getMembers();
+            for (Member member : members) {
+                if (member.getUser() != user) {
+                    
+                    String nick = member.getNickname();
+                    if (nick == null) {
+                        nick = member.getEffectiveName();
+                    }
+                    channelInfo += " + " + nick;
+                    
+                }
+            }
+
+        }
+
+        channelInfo += " in " + vc.getName() + " via " + inv.getURL() + "\n";
+
+        return channelInfo;
     }
 
 }

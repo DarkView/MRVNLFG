@@ -35,10 +35,15 @@ public class MessageListener extends ListenerAdapter {
 
             Core.outLFGInfo(msg.getAuthor(), "Started LFG request in " + msg.getChannel().getName());
             LFGHandler.createLFG(msg, msg.getChannel());
-        } else {
-            if (msgContent.equals("!reload") && msg.getAuthor().getId().equals(Core.VARS.OWNER_ID)) {
-                Core.updateVars();
-            }
+
+        } else if (msgContent.equals("!reload") && Core.VARS.isOwner(msg.getAuthor().getId())) {
+
+            msg.delete().queue();
+            Core.sendMessageToChannel("*Reloading config...*", msg.getChannel());
+            Core.updateVars();
+            Core.sendMessageToChannel("*Reloaded!*", msg.getChannel());
+            Core.outLFGInfo(msg.getAuthor(), "Reloaded the config");
+
         }
 
     }

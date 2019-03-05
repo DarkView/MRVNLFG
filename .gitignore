@@ -10,3 +10,7 @@ MRVNBot/target/maven-archiver/
 MRVNBot/target/original-MRVNBot-1\.1\.jar
 
 MRVNBot/target/test-classes/
+
+MRVNBot/log/
+
+MRVNBot/target/original-MRVNBot-1\.2\.jar

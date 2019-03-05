@@ -23,10 +23,10 @@ public class VarsJSON {
 
         try {
 
-            mapper.writerWithDefaultPrettyPrinter().writeValue(FILE, v);
+            mapper.writerWithDefaultPrettyPrinter().writeValue(new File("settings.json"), v);
 
         } catch (IOException e) {
-
+            Core.outError("", e);
         }
 
     }
@@ -40,7 +40,7 @@ public class VarsJSON {
                 Core.outInfo("Creating the " + FILE.getName() + " file if it does not exist!");
                 Core.createVarsFile();
             }
-            return mapper.readValue(FILE, Vars.class);
+            return mapper.readValue(new File("settings.json"), Vars.class);
         } catch (IOException ex) {
             Core.outError(ex.getMessage(), ex);
         }
