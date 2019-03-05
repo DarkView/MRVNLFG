@@ -14,6 +14,6 @@ Be sure to change the variables in the settings.json file.
  
 Commands for this bot:
  - !reload: Reloads the settings.json file to change identifiers and owner without restarting the bot
- - !<COMMAND_IDENTIFIER>: If the command is sent in a channel with <LFG_TEXT_IDENTIFIER> and the user is in a channel with <LFG_VOICE_IDENTIFIER> in its name, the bot will create or reuse an invite into that channel and post it into the text channel
+ - <COMMAND_IDENTIFIER>: If the command is sent in a channel with <LFG_TEXT_IDENTIFIER> and the user is in a channel with <LFG_VOICE_IDENTIFIER> in its name, the bot will create or reuse an invite into that channel and post it into the text channel
 
 This Discord bot requires Java 8 and uses [JDA](https://github.com/DV8FromTheWorld/JDA)
