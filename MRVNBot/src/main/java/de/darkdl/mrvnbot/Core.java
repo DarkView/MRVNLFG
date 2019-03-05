@@ -7,6 +7,7 @@ package de.darkdl.mrvnbot;
 
 import de.darkdl.mrvnbot.Listeners.MessageListener;
 import de.darkdl.mrvnbot.Listeners.VoiceListener;
+import de.darkdl.mrvnbot.commands.CMDListVars;
 import de.darkdl.mrvnbot.commands.CMDReload;
 import de.darkdl.mrvnbot.commands.CMDUpdateVar;
 import de.darkdl.mrvnbot.commands.CommandHandler;
@@ -73,6 +74,7 @@ public class Core {
     private static void addCommands() {
         CommandHandler.commands.put("reload", new CMDReload());
         CommandHandler.commands.put("updatevar", new CMDUpdateVar());
+        CommandHandler.commands.put("listvars", new CMDListVars());
     }
     
     /**
