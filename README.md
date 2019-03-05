@@ -1,6 +1,7 @@
 **MRVNLFG - MRVNBot**
 
 A bot used to create instant invites into voice channels with a simple command.
+If the voice channel already has instant invites, the first one will be reused.
 
 If you want to use it, you can go ahead. Please keep in mind that no support is offered for this bot at all!
 Be sure to change the variables in the settings.json file.
