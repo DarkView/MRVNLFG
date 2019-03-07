@@ -7,10 +7,14 @@ package de.darkdl.mrvnbot;
 
 import de.darkdl.mrvnbot.Listeners.MessageListener;
 import de.darkdl.mrvnbot.Listeners.VoiceListener;
+import de.darkdl.mrvnbot.commands.CMDAddBlocked;
 import de.darkdl.mrvnbot.commands.CMDListVars;
 import de.darkdl.mrvnbot.commands.CMDReload;
+import de.darkdl.mrvnbot.commands.CMDRemoveBlocked;
 import de.darkdl.mrvnbot.commands.CMDUpdateVar;
 import de.darkdl.mrvnbot.commands.CommandHandler;
+import java.util.ArrayList;
+import java.util.List;
 import javax.security.auth.login.LoginException;
 import net.dv8tion.jda.core.AccountType;
 import net.dv8tion.jda.core.JDA;
@@ -31,15 +35,20 @@ public class Core {
     private static JDABuilder builder;
     private static JDA bot;
     public static Vars VARS;
+    private static List<String> BLOCKED_WORDS;
     private static final Logger LOGGER = LoggerFactory.getLogger(Core.class);
-    public static String VERSION = "1.2.2";
+    public static String VERSION = "1.3";
 
     public static void main(String[] args) throws LoginException, InterruptedException {
         outInfo("Starting up...");
         long startTime = System.currentTimeMillis();
-        VARS = VarsJSON.deserialize();
+        
+        VARS = FileUtils.deserializeVars();
         VARS.allToLowerCase();
         outInfo("Loaded the config");
+        
+        BLOCKED_WORDS = FileUtils.deserializeBlocked();
+        outInfo("Loaded blocked words");
 
         if (VARS.TOKEN.equals("") || VARS.TOKEN == null) {
             outInfo("There is no token in the settings.json! Stopping...");
@@ -79,6 +88,8 @@ public class Core {
         CommandHandler.commands.put("version", new CMDReload());
         CommandHandler.commands.put("updatevar", new CMDUpdateVar());
         CommandHandler.commands.put("listvars", new CMDListVars());
+        CommandHandler.commands.put("addblocked", new CMDAddBlocked());
+        CommandHandler.commands.put("removeblocked", new CMDRemoveBlocked());
     }
     
     /**
@@ -142,17 +153,46 @@ public class Core {
     }
     
     public static void updateVars() {
-        VARS = VarsJSON.deserialize();
+        VARS = FileUtils.deserializeVars();
         VARS.allToLowerCase();
     }
 
     static void createVarsFile() {
         VARS = new Vars();
-        VarsJSON.serialize(VARS);
+        FileUtils.serializeVars(VARS);
     }
 
     public static void saveVars() {
-        VarsJSON.serialize(VARS);
+        FileUtils.serializeVars(VARS);
+    }
+
+    public static List<String> getBlockedWords() {
+        return BLOCKED_WORDS;
+    }
+    
+    public static void addBlockedWord(String regex) {
+        BLOCKED_WORDS.add(regex);
+        saveBlocked();
+    }
+    
+    public static boolean removeBlockedWord(String toRemove) {
+        boolean success = BLOCKED_WORDS.remove(toRemove);
+        saveBlocked();
+        return success;
+    }
+    
+    public static void updateBlocked() {
+        BLOCKED_WORDS = FileUtils.deserializeBlocked();
+    }
+
+    static void createBlockedFile() {
+        BLOCKED_WORDS = new ArrayList<String>();
+        BLOCKED_WORDS.add("n[il1]gg(er|[a@])");
+        FileUtils.serializeBlocked(BLOCKED_WORDS);
+    }
+
+    public static void saveBlocked() {
+        FileUtils.serializeBlocked(BLOCKED_WORDS);
     }
     
 }

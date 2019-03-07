@@ -7,6 +7,7 @@ package de.darkdl.mrvnbot;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.regex.Pattern;
 import net.dv8tion.jda.core.entities.Invite;
 import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.Message;
@@ -61,25 +62,39 @@ public class LFGHandler {
             VoiceChannel vc = CONNECTED_USERS.get(user.getId());
             int vcMembers = vc.getMembers().size();
             if (vcMembers < vc.getUserLimit()) {
-
-                try {
-
-                    String msgContent = msg.getContentStripped().replaceFirst("(?i)!?" + Core.VARS.LFG_COMMAND_IDENTIFIER, "");
-
-                    if (!msgContent.equals("")) {
-                        msgContent = "```".concat(msgContent.trim()).concat("```");
+                
+                String msgContent = msg.getContentStripped();
+                String hasBlockedWord = "";
+                for (String blockedWord : Core.getBlockedWords()) {
+                    if (Pattern.compile(blockedWord).matcher(msgContent).find()) {
+                        hasBlockedWord = blockedWord;
                     }
-
-                    String channelInfo = handleMessageCreation(vc, user);
-
-                    msgContent = channelInfo.concat(msgContent);
-                    Core.sendMessageToChannel(msgContent, channel);
-
-                    Core.outLFGInfo(user, "Succesfully completed LFG request");
-
-                } catch (RateLimitedException ex) {
-                    Core.outError(ex.getMessage(), ex);
                 }
+                
+                if (hasBlockedWord.equals("")) {
+
+                    try {
+
+                        msgContent = msgContent.replaceFirst("(?i)" + Core.VARS.LFG_COMMAND_IDENTIFIER, "");
+
+                        if (!msgContent.equals("")) {
+                            msgContent = "```".concat(msgContent.trim()).concat("```");
+                        }
+
+                        String channelInfo = handleMessageCreation(vc, user);
+
+                        msgContent = channelInfo.concat(msgContent);
+                        Core.sendMessageToChannel(msgContent, channel);
+
+                        Core.outLFGInfo(user, "Succesfully completed LFG request");
+
+                    } catch (RateLimitedException ex) {
+                        Core.outError(ex.getMessage(), ex);
+                    }
+                } else {
+                    Core.outLFGInfo(user, "Stopped LFG request, user triggered the following regex: " + hasBlockedWord);
+                }
+
             } else {
                 Core.sendMessageToChannel("Sorry, but that voice channel is full! " + user.getAsMention(), channel);
                 Core.outLFGInfo(user, "Stopped LFG request, user is in a full channel");
@@ -112,8 +127,6 @@ public class LFGHandler {
             }
         }
 
-        Core.outInfo("Loaded voice channels");
-
     }
 
     private static String handleMessageCreation(VoiceChannel vc, User user) throws RateLimitedException {
@@ -135,13 +148,13 @@ public class LFGHandler {
             List<Member> members = vc.getMembers();
             for (Member member : members) {
                 if (member.getUser() != user) {
-                    
+
                     String nick = member.getNickname();
                     if (nick == null) {
                         nick = member.getEffectiveName();
                     }
                     channelInfo += " + " + nick;
-                    
+
                 }
             }
 
