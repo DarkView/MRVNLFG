@@ -5,6 +5,7 @@
  */
 package de.darkdl.mrvnbot;
 
+import static de.darkdl.mrvnbot.Core.outInfo;
 import java.util.HashMap;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -116,6 +117,8 @@ public class LFGHandler {
      */
     static void loadVoiceChannels(List<VoiceChannel> channels) {
 
+        outInfo("Scanning all voice-channels known...");
+        
         for (VoiceChannel c : channels) {
             if (c.getName().toLowerCase().contains("team")) {
 
@@ -126,6 +129,8 @@ public class LFGHandler {
 
             }
         }
+        
+        outInfo("Done scanning!");
 
     }
 

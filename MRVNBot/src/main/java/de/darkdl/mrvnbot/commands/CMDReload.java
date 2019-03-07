@@ -19,9 +19,9 @@ public class CMDReload implements Command {
     public void called(String[] args, MessageReceivedEvent evt) {
         Message msg = evt.getMessage();
         
-        msg.delete().queue();
-        Core.sendMessageToChannel("*Reloading config...*", msg.getChannel());
+        Core.sendMessageToChannel("*Reloading...*", msg.getChannel());
         Core.updateVars();
+        Core.updateBlocked();
         Core.sendMessageToChannel("*Reloaded!*", msg.getChannel());
         Core.outLFGInfo(msg.getAuthor(), "Reloaded the config");
 

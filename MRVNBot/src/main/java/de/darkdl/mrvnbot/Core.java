@@ -12,6 +12,7 @@ import de.darkdl.mrvnbot.commands.CMDListVars;
 import de.darkdl.mrvnbot.commands.CMDReload;
 import de.darkdl.mrvnbot.commands.CMDRemoveBlocked;
 import de.darkdl.mrvnbot.commands.CMDUpdateVar;
+import de.darkdl.mrvnbot.commands.CMDVersion;
 import de.darkdl.mrvnbot.commands.CommandHandler;
 import java.util.ArrayList;
 import java.util.List;
@@ -63,9 +64,7 @@ public class Core {
         builder.setGame(Game.playing(VARS.LFG_COMMAND_IDENTIFIER));
 
         bot = builder.buildBlocking();
-        outInfo("Scanning all voice-channels known...");
         LFGHandler.loadVoiceChannels(bot.getVoiceChannels());
-        outInfo("Done scanning!");
         addListeners();
         addCommands();
 
@@ -85,7 +84,7 @@ public class Core {
      */
     private static void addCommands() {
         CommandHandler.commands.put("reload", new CMDReload());
-        CommandHandler.commands.put("version", new CMDReload());
+        CommandHandler.commands.put("version", new CMDVersion());
         CommandHandler.commands.put("updatevar", new CMDUpdateVar());
         CommandHandler.commands.put("listvars", new CMDListVars());
         CommandHandler.commands.put("addblocked", new CMDAddBlocked());
