@@ -8,6 +8,8 @@ package de.darkdl.mrvnbot.commands;
 import de.darkdl.mrvnbot.Core;
 import de.darkdl.mrvnbot.Vars;
 import java.lang.reflect.Field;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 
 /**
@@ -24,7 +26,14 @@ public class CMDListVars implements Command {
         for (Field field : fields) {
             String name = field.getName();
             if (!(name.equals("OWNER_IDS") || name.equals("TOKEN"))) {
-                allVars += field.getName() + " | " + field.getType() + "\n";
+
+                try {
+
+                    allVars += field.getName() + " | " + field.get(Core.VARS) + " | " + field.getType() + "\n";
+
+                } catch (IllegalArgumentException | IllegalAccessException ex) {
+                    Core.outError(ex.getMessage(), ex);
+                }
             }
         }
 
