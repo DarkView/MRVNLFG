@@ -37,8 +37,11 @@ public class CMDUpdateVar implements Command {
             case "LIST_OTHER_USERS":
                 Core.VARS.LIST_OTHER_USERS = input.equals("true") || input.equals("1") || input.equals("t");
                 break;
+            case "MESSAGE_COMPACT":
+                Core.VARS.MESSAGE_COMPACT = input.equals("true") || input.equals("1") || input.equals("t");
+                break;
             default:
-                Core.sendMessageToChannel("*Sorry, but that var doesnt exist!*", evt.getMessage().getChannel());
+                Core.sendMessageToChannel("*Sorry, but that var doesnt exist or cannot be updated while running!*", evt.getMessage().getChannel());
                 success = false;
         }
         

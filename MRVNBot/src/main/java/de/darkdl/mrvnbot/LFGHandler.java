@@ -63,7 +63,7 @@ public class LFGHandler {
             VoiceChannel vc = CONNECTED_USERS.get(user.getId());
             int vcMembers = vc.getMembers().size();
             if (vcMembers < vc.getUserLimit()) {
-                
+
                 String msgContent = msg.getContentStripped();
                 String hasBlockedWord = "";
                 for (String blockedWord : Core.getBlockedWords()) {
@@ -71,27 +71,32 @@ public class LFGHandler {
                         hasBlockedWord = blockedWord;
                     }
                 }
-                
+
                 if (hasBlockedWord.equals("")) {
 
                     try {
 
                         msgContent = msgContent.replaceFirst("(?i)" + Core.VARS.LFG_COMMAND_IDENTIFIER, "");
+                        String channelInfo = "";
 
                         if (!msgContent.equals("")) {
-                            msgContent = "```".concat(msgContent.trim()).concat("```");
+                            if (Core.VARS.MESSAGE_COMPACT) {
+                                msgContent = "`".concat(msgContent.trim()).concat("`");
+                            } else {
+                                msgContent = "```".concat(msgContent.trim()).concat("```");
+                            }
+                            channelInfo = handleMessageCreation(vc, user, msgContent);
                         }
 
-                        String channelInfo = handleMessageCreation(vc, user);
-
-                        msgContent = channelInfo.concat(msgContent);
-                        Core.sendMessageToChannel(msgContent, channel);
+                        //msgContent = channelInfo.concat(msgContent);
+                        Core.sendMessageToChannel(channelInfo, channel);
 
                         Core.outLFGInfo(user, "Succesfully completed LFG request");
 
                     } catch (RateLimitedException ex) {
                         Core.outError(ex.getMessage(), ex);
                     }
+
                 } else {
                     Core.outLFGInfo(user, "Stopped LFG request, user triggered the following regex: " + hasBlockedWord);
                 }
@@ -118,7 +123,7 @@ public class LFGHandler {
     static void loadVoiceChannels(List<VoiceChannel> channels) {
 
         outInfo("Scanning all voice-channels known...");
-        
+
         for (VoiceChannel c : channels) {
             if (c.getName().toLowerCase().contains("team")) {
 
@@ -129,12 +134,12 @@ public class LFGHandler {
 
             }
         }
-        
+
         outInfo("Done scanning!");
 
     }
 
-    private static String handleMessageCreation(VoiceChannel vc, User user) throws RateLimitedException {
+    private static String handleMessageCreation(VoiceChannel vc, User user, String message) throws RateLimitedException {
 
         String channelInfo;
         Invite inv;
@@ -146,26 +151,53 @@ public class LFGHandler {
             inv = vc.createInvite().complete(true);
         }
 
-        channelInfo = "Join " + user.getAsMention();
+        if (Core.VARS.MESSAGE_COMPACT) {
 
-        if (Core.VARS.LIST_OTHER_USERS) {
+            channelInfo = user.getAsMention();
 
-            List<Member> members = vc.getMembers();
-            for (Member member : members) {
-                if (member.getUser() != user) {
+            if (Core.VARS.LIST_OTHER_USERS) {
 
-                    String nick = member.getNickname();
-                    if (nick == null) {
-                        nick = member.getEffectiveName();
+                List<Member> members = vc.getMembers();
+                for (Member member : members) {
+                    if (member.getUser() != user) {
+
+                        String nick = member.getNickname();
+                        if (nick == null) {
+                            nick = member.getEffectiveName();
+                        }
+                        channelInfo += " + " + nick;
+
                     }
-                    channelInfo += " + " + nick;
-
                 }
+
             }
 
-        }
+            channelInfo += " in " + vc.getName() + ": " + message + " " + inv.getURL();
 
-        channelInfo += " in " + vc.getName() + " via " + inv.getURL() + "\n";
+        } else {
+
+            channelInfo = "Join " + user.getAsMention();
+
+            if (Core.VARS.LIST_OTHER_USERS) {
+
+                List<Member> members = vc.getMembers();
+                for (Member member : members) {
+                    if (member.getUser() != user) {
+
+                        String nick = member.getNickname();
+                        if (nick == null) {
+                            nick = member.getEffectiveName();
+                        }
+                        channelInfo += " + " + nick;
+
+                    }
+                }
+
+            }
+
+            channelInfo += " in " + vc.getName() + " via " + inv.getURL() + "\n" + message;
+
+        }
 
         return channelInfo;
     }

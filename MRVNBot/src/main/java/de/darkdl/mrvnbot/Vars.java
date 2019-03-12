@@ -17,9 +17,10 @@ public class Vars {
     public String CMD_PREFIX = "";
     public String TOKEN = "";
     public String LFG_VOICE_IDENTIFIER = "";
-    public String LFG_TEXT_IDENTIFIER = ""; //These variables must be lowercase since we convert the Strings to lowercase for the checks
+    public String LFG_TEXT_IDENTIFIER = "";
     public String LFG_COMMAND_IDENTIFIER = "";
     public boolean LIST_OTHER_USERS = true;
+    public boolean MESSAGE_COMPACT = false;
     
     public void allToLowerCase() {
         LFG_VOICE_IDENTIFIER = LFG_VOICE_IDENTIFIER.toLowerCase();
