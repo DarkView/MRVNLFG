@@ -34,6 +34,9 @@ public class CMDUpdateVar implements Command {
             case "LFG_COMMAND_IDENTIFIER":
                 Core.VARS.LFG_COMMAND_IDENTIFIER = input;
                 break;
+            case "INVITE_EXPIRE_SECONDS":
+                Core.VARS.INVITE_EXPIRE_SECONDS = Integer.parseInt(input);
+                break;
             case "LIST_OTHER_USERS":
                 Core.VARS.LIST_OTHER_USERS = input.equals("true") || input.equals("1") || input.equals("t");
                 break;
