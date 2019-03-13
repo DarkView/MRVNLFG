@@ -19,6 +19,7 @@ public class Vars {
     public String LFG_VOICE_IDENTIFIER = "";
     public String LFG_TEXT_IDENTIFIER = "";
     public String LFG_COMMAND_IDENTIFIER = "";
+    public int INVITE_EXPIRE_SECONDS = 300;
     public boolean LIST_OTHER_USERS = true;
     public boolean MESSAGE_COMPACT = false;
     

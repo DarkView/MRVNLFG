@@ -185,7 +185,7 @@ public class Core {
     }
 
     static void createBlockedFile() {
-        BLOCKED_WORDS = new ArrayList<String>();
+        BLOCKED_WORDS = new ArrayList<>();
         BLOCKED_WORDS.add("n[il1]gg(er|[a@])");
         FileUtils.serializeBlocked(BLOCKED_WORDS);
     }

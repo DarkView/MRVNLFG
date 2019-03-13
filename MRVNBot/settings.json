@@ -5,6 +5,7 @@
   "LFG_VOICE_IDENTIFIER" : "team",
   "LFG_TEXT_IDENTIFIER" : "lfg",
   "LFG_COMMAND_IDENTIFIER" : "!lfg",
+  "INVITE_EXPIRE_SECONDS" : 300,
   "LIST_OTHER_USERS" : true,
   "MESSAGE_COMPACT" : false
 }

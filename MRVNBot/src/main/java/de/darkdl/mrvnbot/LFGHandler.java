@@ -85,10 +85,9 @@ public class LFGHandler {
                             } else {
                                 msgContent = "```".concat(msgContent.trim()).concat("```");
                             }
-                            channelInfo = handleMessageCreation(vc, user, msgContent);
                         }
 
-                        //msgContent = channelInfo.concat(msgContent);
+                        channelInfo = handleMessageCreation(vc, user, msgContent);
                         Core.sendMessageToChannel(channelInfo, channel);
 
                         Core.outLFGInfo(user, "Succesfully completed LFG request");
@@ -148,7 +147,7 @@ public class LFGHandler {
         if (!invites.isEmpty()) {
             inv = invites.get(0);
         } else {
-            inv = vc.createInvite().complete(true);
+                inv = vc.createInvite().setMaxAge(Core.VARS.INVITE_EXPIRE_SECONDS).reason(user.getId()).complete(true);
         }
 
         if (Core.VARS.MESSAGE_COMPACT) {
