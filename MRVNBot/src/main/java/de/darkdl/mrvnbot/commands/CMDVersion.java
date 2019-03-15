@@ -16,7 +16,8 @@ public class CMDVersion implements Command{
 
     @Override
     public void called(String[] args, MessageReceivedEvent evt) {
-        Core.sendMessageToChannel("**Version:** " + Core.VERSION, evt.getChannel());
+        Core.sendMessageToChannel("**Current Version:** " + Core.VERSION
+                + "\n**Latest Version:** " + Core.getLatestVersion(), evt.getChannel());
     }
     
 }

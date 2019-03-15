@@ -38,7 +38,7 @@ public class MessageListener extends ListenerAdapter {
             Core.outLFGInfo(msg.getAuthor(), "Started LFG request in " + msg.getChannel().getName());
             LFGHandler.createLFG(msg, msg.getChannel());
 
-        } else if (msgContent.startsWith(Core.VARS.CMD_PREFIX) && Core.VARS.isOwner(msg.getAuthor().getId())) {
+        } else if (msgContent.startsWith(Core.VARS.CMD_PREFIX) && Core.VARS.isMod(msg.getMember())) {
 
             CommandHandler.handleCommand(CommandParser.parser(msg.getContentDisplay(), evt));
 

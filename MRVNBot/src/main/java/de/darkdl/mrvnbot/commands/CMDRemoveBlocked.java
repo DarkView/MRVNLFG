@@ -16,6 +16,7 @@ public class CMDRemoveBlocked implements Command{
 
     @Override
     public void called(String[] args, MessageReceivedEvent evt) {
+        
         if (Core.removeBlockedWord(args[0])) {
             Core.sendMessageToChannel("Removed the regex from the list!", evt.getChannel());
         } else {

@@ -8,8 +8,6 @@ package de.darkdl.mrvnbot.commands;
 import de.darkdl.mrvnbot.Core;
 import de.darkdl.mrvnbot.Vars;
 import java.lang.reflect.Field;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 
 /**

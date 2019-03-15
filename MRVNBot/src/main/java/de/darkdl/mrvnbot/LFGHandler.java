@@ -25,6 +25,9 @@ import net.dv8tion.jda.core.exceptions.RateLimitedException;
 public class LFGHandler {
 
     private static final HashMap<String, VoiceChannel> CONNECTED_USERS = new HashMap<String, VoiceChannel>();
+    
+    public static final long[] MESSAGE_DELAY = new long[5];
+    private static int CURRENT_POS = 0;
 
     /**
      * Adds or overwrites the users current voice channel
@@ -57,6 +60,7 @@ public class LFGHandler {
     public static void createLFG(Message msg, MessageChannel channel) {
 
         User user = msg.getAuthor();
+        Long startTime = System.currentTimeMillis();
 
         if (CONNECTED_USERS.containsKey(user.getId())) {
 
@@ -91,6 +95,10 @@ public class LFGHandler {
                         Core.sendMessageToChannel(channelInfo, channel);
 
                         Core.outLFGInfo(user, "Succesfully completed LFG request");
+                        
+                        MESSAGE_DELAY[CURRENT_POS] = System.currentTimeMillis() - startTime;
+                        CURRENT_POS++;
+                        if (CURRENT_POS >= 5) CURRENT_POS = 0;
 
                     } catch (RateLimitedException ex) {
                         Core.outError(ex.getMessage(), ex);

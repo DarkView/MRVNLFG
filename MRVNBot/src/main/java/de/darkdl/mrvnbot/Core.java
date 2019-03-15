@@ -8,6 +8,8 @@ package de.darkdl.mrvnbot;
 import de.darkdl.mrvnbot.Listeners.MessageListener;
 import de.darkdl.mrvnbot.Listeners.VoiceListener;
 import de.darkdl.mrvnbot.commands.CMDAddBlocked;
+import de.darkdl.mrvnbot.commands.CMDDelay;
+import de.darkdl.mrvnbot.commands.CMDListBlocked;
 import de.darkdl.mrvnbot.commands.CMDListVars;
 import de.darkdl.mrvnbot.commands.CMDReload;
 import de.darkdl.mrvnbot.commands.CMDRemoveBlocked;
@@ -23,7 +25,11 @@ import net.dv8tion.jda.core.JDABuilder;
 import net.dv8tion.jda.core.entities.Game;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.MessageChannel;
+import net.dv8tion.jda.core.entities.MessageEmbed;
 import net.dv8tion.jda.core.entities.User;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,7 +44,7 @@ public class Core {
     public static Vars VARS;
     private static List<String> BLOCKED_WORDS;
     private static final Logger LOGGER = LoggerFactory.getLogger(Core.class);
-    public static String VERSION = "1.3";
+    public static String VERSION = "1.4-beta1";
 
     public static void main(String[] args) throws LoginException, InterruptedException {
         outInfo("Starting up...");
@@ -89,6 +95,8 @@ public class Core {
         CommandHandler.commands.put("listvars", new CMDListVars());
         CommandHandler.commands.put("addblocked", new CMDAddBlocked());
         CommandHandler.commands.put("removeblocked", new CMDRemoveBlocked());
+        CommandHandler.commands.put("listblocked", new CMDListBlocked());
+        CommandHandler.commands.put("delay", new CMDDelay());
     }
     
     /**
@@ -98,6 +106,15 @@ public class Core {
      */
     public static void sendMessageToChannel(String msg, MessageChannel channel) {
         channel.sendMessage(msg).queue();
+    }
+    
+    /**
+     * Sends a public message to the channel
+     * @param embed - The embed to send
+     * @param channel  - The channel in which to send the embed
+     */
+    public static void sendMessageToChannel(MessageEmbed embed, MessageChannel channel) {
+        channel.sendMessage(embed).queue();
     }
     
     /**
@@ -186,12 +203,34 @@ public class Core {
 
     static void createBlockedFile() {
         BLOCKED_WORDS = new ArrayList<>();
-        BLOCKED_WORDS.add("n[il1]gg(er|[a@])");
+        BLOCKED_WORDS.add("(?i)n[il1]gg(er|a|@)");
         FileUtils.serializeBlocked(BLOCKED_WORDS);
     }
 
     public static void saveBlocked() {
         FileUtils.serializeBlocked(BLOCKED_WORDS);
+    }
+    
+    public static long getPing() {
+        return bot.getPing();
+    }
+    
+    public static String getLatestVersion() {
+        try {
+            
+            String url = "https://api.github.com/repos/DarkView/MRVNLFG/releases/latest";
+            OkHttpClient client = new OkHttpClient();
+            Request request = new Request.Builder().url(url).build();
+            String response = client.newCall(request).execute().body().string();
+            JSONObject jObjects = new JSONObject(response);
+            
+            return jObjects.getString("tag_name");
+            
+        } catch (Exception ex) {
+            System.out.println(ex.getStackTrace());
+        }
+        
+        return "Error";
     }
     
 }

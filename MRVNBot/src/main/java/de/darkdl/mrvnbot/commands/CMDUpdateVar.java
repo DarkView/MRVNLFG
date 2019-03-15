@@ -16,12 +16,16 @@ public class CMDUpdateVar implements Command {
 
     @Override
     public void called(String[] args, MessageReceivedEvent evt) {
+        if (!Core.VARS.isOwner(evt.getAuthor().getId())) return;
 
         String var = args[0];
         String input = args[1];
         boolean success = true;
 
         switch (var.toUpperCase()) {
+            case "MOD_ROLE_ID":
+                Core.VARS.MOD_ROLE_ID = input;
+                break;
             case "CMD_PREFIX":
                 Core.VARS.CMD_PREFIX = input;
                 break;
