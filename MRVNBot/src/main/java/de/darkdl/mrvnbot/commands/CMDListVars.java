@@ -18,6 +18,7 @@ public class CMDListVars implements Command {
 
     @Override
     public void called(String[] args, MessageReceivedEvent evt) {
+        if (!Core.VARS.isOwner(evt.getAuthor().getId())) return;
         String allVars = "";
         Field[] fields = Vars.class.getFields();
 
