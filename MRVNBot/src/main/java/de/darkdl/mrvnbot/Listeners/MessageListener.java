@@ -5,8 +5,8 @@
  */
 package de.darkdl.mrvnbot.Listeners;
 
-import de.darkdl.mrvnbot.commands.CommandHandler;
-import de.darkdl.mrvnbot.commands.CommandParser;
+import de.darkdl.mrvnbot.utils.CommandHandler;
+import de.darkdl.mrvnbot.utils.CommandParser;
 import de.darkdl.mrvnbot.Core;
 import de.darkdl.mrvnbot.LFGHandler;
 import net.dv8tion.jda.core.entities.Message;
@@ -40,7 +40,7 @@ public class MessageListener extends ListenerAdapter {
 
         } else if (msgContent.startsWith(Core.VARS.CMD_PREFIX) && Core.VARS.isMod(msg.getMember())) {
 
-            CommandHandler.handleCommand(CommandParser.parser(msg.getContentDisplay(), evt));
+            CommandHandler.handleCommand(CommandParser.parser(msg.getContentRaw(), evt));
 
         }
 

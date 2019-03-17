@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package de.darkdl.mrvnbot;
+package de.darkdl.mrvnbot.utils;
 
 import java.util.List;
 import net.dv8tion.jda.core.entities.Member;

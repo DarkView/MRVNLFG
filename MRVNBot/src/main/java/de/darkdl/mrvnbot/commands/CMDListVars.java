@@ -6,7 +6,7 @@
 package de.darkdl.mrvnbot.commands;
 
 import de.darkdl.mrvnbot.Core;
-import de.darkdl.mrvnbot.Vars;
+import de.darkdl.mrvnbot.utils.Vars;
 import java.lang.reflect.Field;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 
