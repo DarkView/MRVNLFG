@@ -31,6 +31,11 @@ public class CMDDelay implements Command{
             delayAvg += delay;
         }
         delayAvg = delayAvg / delays.length;
+        if (delayAvg >= 1000 || ping >= 250) {
+            eb.setColor(Color.RED);
+        } else if (delayAvg <= 150 && ping <= 150) {
+            eb.setColor(Color.GREEN);
+        }
         
         eb.setDescription("**Ping:** " + ping + "ms\n**LFG Delay:** " + delayAvg + "ms");
         Core.sendMessageToChannel(eb.build(), evt.getChannel());
