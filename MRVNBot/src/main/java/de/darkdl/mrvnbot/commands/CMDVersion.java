@@ -6,6 +6,8 @@
 package de.darkdl.mrvnbot.commands;
 
 import de.darkdl.mrvnbot.Core;
+import java.awt.Color;
+import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 
 /**
@@ -16,8 +18,14 @@ public class CMDVersion implements Command{
 
     @Override
     public void called(String[] args, MessageReceivedEvent evt) {
-        Core.sendMessageToChannel("**Current Version:** " + Core.VERSION
-                + "\n**Latest Version:** " + Core.getLatestVersion(), evt.getChannel());
+        
+        EmbedBuilder eb = new EmbedBuilder();
+        eb.setAuthor("Version");
+        eb.setColor(Color.GREEN);
+        eb.setDescription("**Current Version:** " + Core.VERSION
+                + "\n**Latest Stable Version:** " + Core.getLatestStableVersion());
+        
+        Core.sendMessageToChannel(eb.build(), evt.getChannel());
     }
     
 }

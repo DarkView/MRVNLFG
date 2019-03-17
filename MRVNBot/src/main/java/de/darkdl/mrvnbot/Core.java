@@ -233,7 +233,7 @@ public class Core {
         return bot.getPing();
     }
 
-    public static String getLatestVersion() {
+    public static String getLatestStableVersion() {
         try {
 
             String url = "https://api.github.com/repos/DarkView/MRVNLFG/releases/latest";
@@ -250,7 +250,7 @@ public class Core {
 
         return "Error";
     }
-
+    
     public static void newMessage(String title) {
         currentMessage = new MRVNMessage();
         currentMessage.setTitle(title);
