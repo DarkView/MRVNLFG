@@ -5,19 +5,26 @@
  */
 package de.darkdl.mrvnbot;
 
+import de.darkdl.mrvnbot.utils.FileUtils;
+import de.darkdl.mrvnbot.utils.Vars;
 import de.darkdl.mrvnbot.Listeners.MessageListener;
 import de.darkdl.mrvnbot.Listeners.VoiceListener;
 import de.darkdl.mrvnbot.commands.CMDAddBlocked;
 import de.darkdl.mrvnbot.commands.CMDDelay;
 import de.darkdl.mrvnbot.commands.CMDListBlocked;
 import de.darkdl.mrvnbot.commands.CMDListVars;
+import de.darkdl.mrvnbot.commands.CMDMessage;
 import de.darkdl.mrvnbot.commands.CMDReload;
 import de.darkdl.mrvnbot.commands.CMDRemoveBlocked;
 import de.darkdl.mrvnbot.commands.CMDUpdateVar;
 import de.darkdl.mrvnbot.commands.CMDVersion;
-import de.darkdl.mrvnbot.commands.CommandHandler;
+import de.darkdl.mrvnbot.utils.CommandHandler;
+import de.darkdl.mrvnbot.utils.MRVNMessage;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import javax.security.auth.login.LoginException;
 import net.dv8tion.jda.core.AccountType;
 import net.dv8tion.jda.core.JDA;
@@ -44,16 +51,17 @@ public class Core {
     public static Vars VARS;
     private static List<String> BLOCKED_WORDS;
     private static final Logger LOGGER = LoggerFactory.getLogger(Core.class);
-    public static String VERSION = "1.4-beta1";
+    public static String VERSION = "1.4-beta4";
+    private static MRVNMessage currentMessage;
 
     public static void main(String[] args) throws LoginException, InterruptedException {
         outInfo("Starting up...");
         long startTime = System.currentTimeMillis();
-        
+
         VARS = FileUtils.deserializeVars();
         VARS.allToLowerCase();
         outInfo("Loaded the config");
-        
+
         BLOCKED_WORDS = FileUtils.deserializeBlocked();
         outInfo("Loaded blocked words");
 
@@ -61,7 +69,7 @@ public class Core {
             outInfo("There is no token in the settings.json! Stopping...");
             System.exit(0);
         }
-        
+
         builder = new JDABuilder(AccountType.BOT);
 
         builder.setToken(VARS.TOKEN);
@@ -84,7 +92,7 @@ public class Core {
         bot.addEventListener(new MessageListener());
         bot.addEventListener(new VoiceListener());
     }
-    
+
     /**
      * Used to add the commands to the running bot
      */
@@ -97,28 +105,32 @@ public class Core {
         CommandHandler.commands.put("removeblocked", new CMDRemoveBlocked());
         CommandHandler.commands.put("listblocked", new CMDListBlocked());
         CommandHandler.commands.put("delay", new CMDDelay());
+        CommandHandler.commands.put("message", new CMDMessage());
     }
-    
+
     /**
      * Sends a public message to the channel
+     *
      * @param msg - The message to send
-     * @param channel  - The channel in which to send the message
+     * @param channel - The channel in which to send the message
      */
     public static void sendMessageToChannel(String msg, MessageChannel channel) {
         channel.sendMessage(msg).queue();
     }
-    
+
     /**
      * Sends a public message to the channel
+     *
      * @param embed - The embed to send
-     * @param channel  - The channel in which to send the embed
+     * @param channel - The channel in which to send the embed
      */
     public static void sendMessageToChannel(MessageEmbed embed, MessageChannel channel) {
         channel.sendMessage(embed).queue();
     }
-    
+
     /**
      * Deletes a specific {@link net.dv8tion.jda.core.entities.Message Message}
+     *
      * @param msg - The Message to be deleted
      */
     public static void deleteMessage(Message msg) {
@@ -126,7 +138,9 @@ public class Core {
     }
 
     /**
-     * Uses the log4j binding to output a message and the Exceptions stacktrace if an Exception is present
+     * Uses the log4j binding to output a message and the Exceptions stacktrace
+     * if an Exception is present
+     *
      * @param message - The message to be logged
      * @param ex - The Exception to be traced. Can be null
      */
@@ -137,18 +151,21 @@ public class Core {
             LOGGER.trace(message, ex);
         }
     }
-    
+
     /**
      * Outputs a message through the log4j binding
+     *
      * @param message - The message to be logged
      */
     public static void outInfo(String message) {
         LOGGER.info(message);
     }
-    
+
     /**
      * Logs a specific message accompanied by the users name and snowflake
-     * @param u - The user to be logged alongside the message, in this case the one that executed the request
+     *
+     * @param u - The user to be logged alongside the message, in this case the
+     * one that executed the request
      * @param message - The message to log
      */
     public static void outLFGInfo(User u, String message) {
@@ -157,23 +174,24 @@ public class Core {
 
     /**
      * Formats a users information for logging
+     *
      * @param u - The user for which we want the formatted information
      * @return - String - The formatted information
      */
     public static String userInfo(User u) {
         String uInf;
-        
+
         uInf = "" + u.getName() + "#" + u.getDiscriminator() + " (" + u.getId() + ")";
-        
+
         return uInf;
     }
-    
+
     public static void updateVars() {
         VARS = FileUtils.deserializeVars();
         VARS.allToLowerCase();
     }
 
-    static void createVarsFile() {
+    public static void createVarsFile() {
         VARS = new Vars();
         FileUtils.serializeVars(VARS);
     }
@@ -185,23 +203,23 @@ public class Core {
     public static List<String> getBlockedWords() {
         return BLOCKED_WORDS;
     }
-    
+
     public static void addBlockedWord(String regex) {
         BLOCKED_WORDS.add(regex);
         saveBlocked();
     }
-    
+
     public static boolean removeBlockedWord(String toRemove) {
         boolean success = BLOCKED_WORDS.remove(toRemove);
         saveBlocked();
         return success;
     }
-    
+
     public static void updateBlocked() {
         BLOCKED_WORDS = FileUtils.deserializeBlocked();
     }
 
-    static void createBlockedFile() {
+    public static void createBlockedFile() {
         BLOCKED_WORDS = new ArrayList<>();
         BLOCKED_WORDS.add("(?i)n[il1]gg(er|a|@)");
         FileUtils.serializeBlocked(BLOCKED_WORDS);
@@ -210,27 +228,111 @@ public class Core {
     public static void saveBlocked() {
         FileUtils.serializeBlocked(BLOCKED_WORDS);
     }
-    
+
     public static long getPing() {
         return bot.getPing();
     }
-    
+
     public static String getLatestVersion() {
         try {
-            
+
             String url = "https://api.github.com/repos/DarkView/MRVNLFG/releases/latest";
             OkHttpClient client = new OkHttpClient();
             Request request = new Request.Builder().url(url).build();
             String response = client.newCall(request).execute().body().string();
             JSONObject jObjects = new JSONObject(response);
-            
+
             return jObjects.getString("tag_name");
-            
+
         } catch (Exception ex) {
-            System.out.println(ex.getStackTrace());
+            Core.outError(ex.getMessage(), ex);
         }
-        
+
         return "Error";
     }
-    
+
+    public static void newMessage(String title) {
+        currentMessage = new MRVNMessage();
+        currentMessage.setTitle(title);
+    }
+
+    public static void loadMessage(String toLoad) {
+        currentMessage = FileUtils.deserializeMRVNMessage(toLoad);
+    }
+
+    public static void setChannels(String[] args) {
+        Map<String, String> channels = new HashMap<>();
+        
+        for (int i = 1; i < args.length; i++) {
+            channels.putIfAbsent(args[i], "");
+        }
+        
+        currentMessage.setChannelAndMessageIDs(channels);
+    }
+
+    public static void setMessage(String[] args) {
+        StringBuilder sb = new StringBuilder();
+        
+        for (int i = 1; i < args.length; i++) {
+            sb.append(args[i] + " ");
+        }
+        
+        currentMessage.setMessage(sb.toString());
+    }
+
+    public static void postMessage() {
+        Map<String, String> channelAndMessageIDs = currentMessage.getChannelAndMessageIDs();
+        Set<String> keySet = channelAndMessageIDs.keySet();
+
+        for (String key : keySet) {
+
+            String messageID = channelAndMessageIDs.get(key);
+            if (!messageID.equals("")) {
+
+                Message msg = bot.getTextChannelById(key).getMessageById(messageID).complete();
+                msg.editMessage(currentMessage.getMessage()).queue();
+
+                if (currentMessage.isPin()) {
+                    msg.pin().queue();
+                } else {
+                    msg.unpin().queue();
+                }
+
+            } else {
+
+                Message msg = bot.getTextChannelById(key).sendMessage(currentMessage.getMessage()).complete();
+                if (currentMessage.isPin()) {
+                    msg.pin().queue();
+                }
+
+                channelAndMessageIDs.put(key, msg.getId());
+            }
+        }
+    }
+
+    public static void deleteMrvnMessage() {
+        Map<String, String> channelAndMessageIDs = currentMessage.getChannelAndMessageIDs();
+        Map<String, String> newIDs = new HashMap<>();
+        Set<String> keySet = channelAndMessageIDs.keySet();
+        
+        for (String key : keySet) {
+            bot.getTextChannelById(key).deleteMessageById(channelAndMessageIDs.get(key)).queue();
+            newIDs.put(key, "");
+        }
+        
+        currentMessage.setChannelAndMessageIDs(newIDs);
+    }
+
+    public static void saveMessage() {
+        FileUtils.serializeMRVNMessage(currentMessage);
+    }
+
+    public static void postMRVNMessageInfo(MessageChannel channel) {
+        sendMessageToChannel(currentMessage.toString(), channel);
+    }
+
+    public static void setPin(boolean b) {
+        currentMessage.setPin(b);
+    }
+
 }

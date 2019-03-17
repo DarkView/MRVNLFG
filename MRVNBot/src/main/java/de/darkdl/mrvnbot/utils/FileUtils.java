@@ -3,10 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package de.darkdl.mrvnbot;
+package de.darkdl.mrvnbot.utils;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import de.darkdl.mrvnbot.Core;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
@@ -76,6 +77,36 @@ public class FileUtils {
             }
             TypeReference<List<String>> listReference = new TypeReference<List<String>>() {};
             return mapper.readValue(new File("blocked-words.json"), listReference);
+        } catch (IOException ex) {
+            Core.outError(ex.getMessage(), ex);
+        }
+
+        return null;
+    }
+    
+    public static boolean serializeMRVNMessage(MRVNMessage msg) {
+
+        ObjectMapper mapper = new ObjectMapper();
+
+        try {
+
+            mapper.writerWithDefaultPrettyPrinter().writeValue(new File(msg.getTitle().concat("-message.json")), msg);
+            return true;
+
+        } catch (IOException e) {
+            Core.outError(e.getMessage(), e);
+        }
+
+        return false;
+    }
+
+    public static MRVNMessage deserializeMRVNMessage(String messageName) {
+
+        ObjectMapper mapper = new ObjectMapper();
+        File messageFile = new File(messageName.concat("-message.json"));
+
+        try {
+            return mapper.readValue(messageFile, MRVNMessage.class);
         } catch (IOException ex) {
             Core.outError(ex.getMessage(), ex);
         }

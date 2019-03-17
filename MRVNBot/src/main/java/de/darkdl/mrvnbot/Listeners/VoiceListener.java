@@ -7,7 +7,7 @@ package de.darkdl.mrvnbot.Listeners;
 
 import de.darkdl.mrvnbot.Core;
 import de.darkdl.mrvnbot.LFGHandler;
-import de.darkdl.mrvnbot.Vars;
+import de.darkdl.mrvnbot.utils.Vars;
 import net.dv8tion.jda.core.entities.User;
 import net.dv8tion.jda.core.entities.VoiceChannel;
 import net.dv8tion.jda.core.events.guild.voice.GuildVoiceJoinEvent;
