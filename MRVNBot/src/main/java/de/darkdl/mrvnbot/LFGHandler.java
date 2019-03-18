@@ -27,7 +27,7 @@ import net.dv8tion.jda.core.exceptions.RateLimitedException;
 public class LFGHandler {
 
     private static final HashMap<String, VoiceChannel> CONNECTED_USERS = new HashMap<String, VoiceChannel>();
-    
+
     public static final long[] MESSAGE_DELAY = new long[5];
     private static int CURRENT_POS = 0;
 
@@ -64,9 +64,9 @@ public class LFGHandler {
         User user = msg.getAuthor();
         Long startTime = System.currentTimeMillis();
 
-        if (CONNECTED_USERS.containsKey(user.getId())) {
+        VoiceChannel vc = CONNECTED_USERS.getOrDefault(user.getId(), null);
+        if (vc != null && vc.getName().contains(Core.VARS.LFG_VOICE_IDENTIFIER)) {
 
-            VoiceChannel vc = CONNECTED_USERS.get(user.getId());
             int vcMembers = vc.getMembers().size();
             if (vcMembers < vc.getUserLimit()) {
 
@@ -97,10 +97,12 @@ public class LFGHandler {
                         Core.sendMessageToChannel(channelInfo, channel);
 
                         Core.outLFGInfo(user, "Succesfully completed LFG request");
-                        
+
                         MESSAGE_DELAY[CURRENT_POS] = System.currentTimeMillis() - startTime;
                         CURRENT_POS++;
-                        if (CURRENT_POS >= 5) CURRENT_POS = 0;
+                        if (CURRENT_POS >= 5) {
+                            CURRENT_POS = 0;
+                        }
 
                     } catch (RateLimitedException ex) {
                         Core.outError(ex.getMessage(), ex);
@@ -134,14 +136,12 @@ public class LFGHandler {
         outInfo("Scanning all voice-channels known...");
 
         for (VoiceChannel c : channels) {
-            if (c.getName().toLowerCase().contains("team")) {
 
-                List<Member> members = c.getMembers();
-                for (Member m : members) {
-                    userConnected(m.getUser().getId(), c);
-                }
-
+            List<Member> members = c.getMembers();
+            for (Member m : members) {
+                userConnected(m.getUser().getId(), c);
             }
+
         }
 
         outInfo("Done scanning!");
@@ -152,7 +152,7 @@ public class LFGHandler {
 
         String channelInfo;
         Invite inv = createInvite(vc, user);
-        
+
         if (Core.VARS.MESSAGE_COMPACT) {
 
             channelInfo = user.getAsMention();
@@ -203,18 +203,18 @@ public class LFGHandler {
 
         return channelInfo;
     }
-    
+
     public static Invite createInvite(VoiceChannel vc, User user) {
         try {
-            
+
             List<Invite> invites = vc.getInvites().complete(true);
-            
+
             if (!invites.isEmpty()) {
                 return invites.get(0);
             } else {
                 return vc.createInvite().setMaxAge(Core.VARS.INVITE_EXPIRE_SECONDS).reason(user.getId()).complete(true);
             }
-            
+
         } catch (RateLimitedException ex) {
             Logger.getLogger(LFGHandler.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -225,7 +225,9 @@ public class LFGHandler {
         VoiceChannel vc = CONNECTED_USERS.getOrDefault(arg, null);
         if (vc != null) {
             return vc;
-        } else return null;
+        } else {
+            return null;
+        }
     }
 
 }
