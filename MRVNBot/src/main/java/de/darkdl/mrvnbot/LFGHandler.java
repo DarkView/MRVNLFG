@@ -26,7 +26,7 @@ import net.dv8tion.jda.core.exceptions.RateLimitedException;
  */
 public class LFGHandler {
 
-    private static final HashMap<String, VoiceChannel> CONNECTED_USERS = new HashMap<String, VoiceChannel>();
+    private static final HashMap<String, String> CONNECTED_USERS = new HashMap<String, String>();
 
     public static final long[] MESSAGE_DELAY = new long[5];
     private static int CURRENT_POS = 0;
@@ -39,7 +39,7 @@ public class LFGHandler {
      * @param channel - The VoiceChannel object the user is currently in
      */
     public static void userConnected(String userID, VoiceChannel channel) {
-        CONNECTED_USERS.put(userID, channel);
+        CONNECTED_USERS.put(userID, channel.getId());
     }
 
     /**
@@ -64,8 +64,8 @@ public class LFGHandler {
         User user = msg.getAuthor();
         Long startTime = System.currentTimeMillis();
 
-        VoiceChannel vc = CONNECTED_USERS.getOrDefault(user.getId(), null);
-        if (vc != null && vc.getName().contains(Core.VARS.LFG_VOICE_IDENTIFIER)) {
+        VoiceChannel vc = Core.bot.getVoiceChannelById(CONNECTED_USERS.getOrDefault(user.getId(), null));
+        if (vc != null && vc.getName().toLowerCase().contains(Core.VARS.LFG_VOICE_IDENTIFIER)) {
 
             int vcMembers = vc.getMembers().size();
             if (vcMembers < vc.getUserLimit()) {
@@ -132,8 +132,6 @@ public class LFGHandler {
      * @param channels - A list of all channels to be loaded
      */
     static void loadVoiceChannels(List<VoiceChannel> channels) {
-
-        outInfo("Scanning all voice-channels known...");
 
         for (VoiceChannel c : channels) {
 
@@ -216,13 +214,13 @@ public class LFGHandler {
             }
 
         } catch (RateLimitedException ex) {
-            Logger.getLogger(LFGHandler.class.getName()).log(Level.SEVERE, null, ex);
+            Core.outError(ex.getMessage(), ex);
         }
         return null;
     }
 
     public static VoiceChannel whereIsUser(String arg) {
-        VoiceChannel vc = CONNECTED_USERS.getOrDefault(arg, null);
+        VoiceChannel vc = Core.bot.getVoiceChannelById(CONNECTED_USERS.getOrDefault(arg, null));
         if (vc != null) {
             return vc;
         } else {

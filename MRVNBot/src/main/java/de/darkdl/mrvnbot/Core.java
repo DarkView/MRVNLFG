@@ -49,7 +49,7 @@ import org.slf4j.LoggerFactory;
 public class Core {
 
     private static JDABuilder builder;
-    private static JDA bot;
+    public static JDA bot;
     public static Vars VARS;
     private static List<String> BLOCKED_WORDS;
     private static final Logger LOGGER = LoggerFactory.getLogger(Core.class);
@@ -78,7 +78,8 @@ public class Core {
         builder.setAutoReconnect(true);
         builder.setContextEnabled(true);
         builder.setGame(Game.playing(VARS.LFG_COMMAND_IDENTIFIER));
-
+        
+        outInfo("Scanning all voice-channels known...");
         bot = builder.buildBlocking();
         LFGHandler.loadVoiceChannels(bot.getVoiceChannels());
         addListeners();

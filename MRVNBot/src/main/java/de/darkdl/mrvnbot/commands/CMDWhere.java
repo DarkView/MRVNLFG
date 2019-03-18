@@ -18,16 +18,20 @@ public class CMDWhere implements Command {
 
     @Override
     public void called(String[] args, MessageReceivedEvent evt) {
-        
+
         VoiceChannel vc = LFGHandler.whereIsUser(args[0]);
-        if (vc != null) {
-            Core.sendMessageToChannel(vc.getName() + "  |  " + LFGHandler.createInvite(vc, evt.getAuthor()).getURL(), evt.getChannel());
+        if (args.length >= 1) {
+            
+            if (vc != null) {
+                Core.sendMessageToChannel(vc.getName() + "  |  " + LFGHandler.createInvite(vc, evt.getAuthor()).getURL(), evt.getChannel());
+                Core.outLFGInfo(evt.getAuthor(), "Executed where for user " + args[0]);
+            } else {
+                Core.sendMessageToChannel("The user is not in a LFG voice channel!", evt.getChannel());
+            }
             Core.outLFGInfo(evt.getAuthor(), "Executed where for user " + args[0]);
-        } else {
-            Core.sendMessageToChannel("The user is not in a LFG voice channel!", evt.getChannel());
+            
         }
-        
-        Core.outLFGInfo(evt.getAuthor(), "Executed where for user " + args[0]);
+
     }
 
 }
