@@ -31,8 +31,15 @@ public class CMDMessage implements Command {
                     save = false;
                     Core.loadMessage(args[1]);
                     break;
+                case "unload":
+                    save = false;
+                    Core.unloadMessage();
+                    break;
                 case "setchannels":
                     Core.setChannels(args);
+                    break;
+                case "addchannels":
+                    Core.addChannels(args);
                     break;
                 case "setmessage":
                     Core.setMessage(args);

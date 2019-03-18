@@ -4,7 +4,7 @@
   <groupId>de.darkdl</groupId>
   <artifactId>MRVNBot</artifactId>
   <name>MRVN</name>
-  <version>1.4-beta4</version>
+  <version>1.4-RC1</version>
   <build>
     <plugins>
       <plugin>

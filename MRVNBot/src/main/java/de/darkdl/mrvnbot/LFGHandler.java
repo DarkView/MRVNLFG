@@ -8,6 +8,8 @@ package de.darkdl.mrvnbot;
 import static de.darkdl.mrvnbot.Core.outInfo;
 import java.util.HashMap;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.regex.Pattern;
 import net.dv8tion.jda.core.entities.Invite;
 import net.dv8tion.jda.core.entities.Member;
@@ -149,15 +151,8 @@ public class LFGHandler {
     private static String handleMessageCreation(VoiceChannel vc, User user, String message) throws RateLimitedException {
 
         String channelInfo;
-        Invite inv;
-        List<Invite> invites = vc.getInvites().complete(true);
-
-        if (!invites.isEmpty()) {
-            inv = invites.get(0);
-        } else {
-                inv = vc.createInvite().setMaxAge(Core.VARS.INVITE_EXPIRE_SECONDS).reason(user.getId()).complete(true);
-        }
-
+        Invite inv = createInvite(vc, user);
+        
         if (Core.VARS.MESSAGE_COMPACT) {
 
             channelInfo = user.getAsMention();
@@ -207,6 +202,30 @@ public class LFGHandler {
         }
 
         return channelInfo;
+    }
+    
+    public static Invite createInvite(VoiceChannel vc, User user) {
+        try {
+            
+            List<Invite> invites = vc.getInvites().complete(true);
+            
+            if (!invites.isEmpty()) {
+                return invites.get(0);
+            } else {
+                return vc.createInvite().setMaxAge(Core.VARS.INVITE_EXPIRE_SECONDS).reason(user.getId()).complete(true);
+            }
+            
+        } catch (RateLimitedException ex) {
+            Logger.getLogger(LFGHandler.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
+
+    public static VoiceChannel whereIsUser(String arg) {
+        VoiceChannel vc = CONNECTED_USERS.getOrDefault(arg, null);
+        if (vc != null) {
+            return vc;
+        } else return null;
     }
 
 }

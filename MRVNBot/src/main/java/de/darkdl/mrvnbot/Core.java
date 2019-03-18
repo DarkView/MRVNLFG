@@ -18,6 +18,7 @@ import de.darkdl.mrvnbot.commands.CMDReload;
 import de.darkdl.mrvnbot.commands.CMDRemoveBlocked;
 import de.darkdl.mrvnbot.commands.CMDUpdateVar;
 import de.darkdl.mrvnbot.commands.CMDVersion;
+import de.darkdl.mrvnbot.commands.CMDWhere;
 import de.darkdl.mrvnbot.utils.CommandHandler;
 import de.darkdl.mrvnbot.utils.MRVNMessage;
 import java.util.ArrayList;
@@ -29,6 +30,7 @@ import javax.security.auth.login.LoginException;
 import net.dv8tion.jda.core.AccountType;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.JDABuilder;
+import net.dv8tion.jda.core.entities.Channel;
 import net.dv8tion.jda.core.entities.Game;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.MessageChannel;
@@ -51,11 +53,11 @@ public class Core {
     public static Vars VARS;
     private static List<String> BLOCKED_WORDS;
     private static final Logger LOGGER = LoggerFactory.getLogger(Core.class);
-    public static String VERSION = "1.4-beta4";
+    public static String VERSION = "1.4-RC1";
     private static MRVNMessage currentMessage;
 
     public static void main(String[] args) throws LoginException, InterruptedException {
-        outInfo("Starting up...");
+        outInfo("Starting up " + VERSION + "...");
         long startTime = System.currentTimeMillis();
 
         VARS = FileUtils.deserializeVars();
@@ -106,6 +108,7 @@ public class Core {
         CommandHandler.commands.put("listblocked", new CMDListBlocked());
         CommandHandler.commands.put("delay", new CMDDelay());
         CommandHandler.commands.put("message", new CMDMessage());
+        CommandHandler.commands.put("where", new CMDWhere());
     }
 
     /**
@@ -250,7 +253,7 @@ public class Core {
 
         return "Error";
     }
-    
+
     public static void newMessage(String title) {
         currentMessage = new MRVNMessage();
         currentMessage.setTitle(title);
@@ -262,27 +265,56 @@ public class Core {
 
     public static void setChannels(String[] args) {
         Map<String, String> channels = new HashMap<>();
-        
+
         for (int i = 1; i < args.length; i++) {
-            channels.putIfAbsent(args[i], "");
+            String current = args[i];
+            if (current.startsWith("c")) {
+                current = current.replaceAll("[^0-9]", "");
+                List<Channel> catChannels = bot.getCategoryById(current).getChannels();
+                for (Channel catChannel : catChannels) {
+                    channels.putIfAbsent(catChannel.getId(), "");
+                }
+            } else {
+                channels.putIfAbsent(args[i], "");
+            }
         }
-        
+
+        currentMessage.setChannelAndMessageIDs(channels);
+    }
+    
+    public static void addChannels(String[] args) {
+        Map<String, String> channels = currentMessage.getChannelAndMessageIDs();
+
+        for (int i = 1; i < args.length; i++) {
+            String current = args[i];
+            if (current.startsWith("c")) {
+                current = current.replaceAll("[^0-9]", "");
+                List<Channel> catChannels = bot.getCategoryById(current).getChannels();
+                for (Channel catChannel : catChannels) {
+                    channels.putIfAbsent(catChannel.getId(), "");
+                }
+            } else {
+                channels.putIfAbsent(args[i], "");
+            }
+        }
+
         currentMessage.setChannelAndMessageIDs(channels);
     }
 
     public static void setMessage(String[] args) {
         StringBuilder sb = new StringBuilder();
-        
+
         for (int i = 1; i < args.length; i++) {
             sb.append(args[i] + " ");
         }
-        
+
         currentMessage.setMessage(sb.toString());
     }
 
     public static void postMessage() {
         Map<String, String> channelAndMessageIDs = currentMessage.getChannelAndMessageIDs();
         Set<String> keySet = channelAndMessageIDs.keySet();
+        boolean toPin = currentMessage.isPin();
 
         for (String key : keySet) {
 
@@ -292,7 +324,7 @@ public class Core {
                 Message msg = bot.getTextChannelById(key).getMessageById(messageID).complete();
                 msg.editMessage(currentMessage.getMessage()).queue();
 
-                if (currentMessage.isPin()) {
+                if (toPin) {
                     msg.pin().queue();
                 } else {
                     msg.unpin().queue();
@@ -301,7 +333,7 @@ public class Core {
             } else {
 
                 Message msg = bot.getTextChannelById(key).sendMessage(currentMessage.getMessage()).complete();
-                if (currentMessage.isPin()) {
+                if (toPin) {
                     msg.pin().queue();
                 }
 
@@ -314,12 +346,12 @@ public class Core {
         Map<String, String> channelAndMessageIDs = currentMessage.getChannelAndMessageIDs();
         Map<String, String> newIDs = new HashMap<>();
         Set<String> keySet = channelAndMessageIDs.keySet();
-        
+
         for (String key : keySet) {
             bot.getTextChannelById(key).deleteMessageById(channelAndMessageIDs.get(key)).queue();
             newIDs.put(key, "");
         }
-        
+
         currentMessage.setChannelAndMessageIDs(newIDs);
     }
 
@@ -333,6 +365,10 @@ public class Core {
 
     public static void setPin(boolean b) {
         currentMessage.setPin(b);
+    }
+
+    public static void unloadMessage() {
+        currentMessage = new MRVNMessage();
     }
 
 }
