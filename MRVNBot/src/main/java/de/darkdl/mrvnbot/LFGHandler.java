@@ -64,7 +64,7 @@ public class LFGHandler {
         User user = msg.getAuthor();
         Long startTime = System.currentTimeMillis();
 
-        VoiceChannel vc = Core.bot.getVoiceChannelById(CONNECTED_USERS.getOrDefault(user.getId(), null));
+        VoiceChannel vc = Core.bot.getVoiceChannelById(CONNECTED_USERS.getOrDefault(user.getId(), "999999999999999999"));
         if (vc != null && vc.getName().toLowerCase().contains(Core.VARS.LFG_VOICE_IDENTIFIER)) {
 
             int vcMembers = vc.getMembers().size();
@@ -220,7 +220,7 @@ public class LFGHandler {
     }
 
     public static VoiceChannel whereIsUser(String arg) {
-        VoiceChannel vc = Core.bot.getVoiceChannelById(CONNECTED_USERS.getOrDefault(arg, null));
+        VoiceChannel vc = Core.bot.getVoiceChannelById(CONNECTED_USERS.getOrDefault(arg, "999999999999999999"));
         if (vc != null) {
             return vc;
         } else {

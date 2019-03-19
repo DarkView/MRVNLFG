@@ -26,7 +26,7 @@ public class CMDWhere implements Command {
                 Core.sendMessageToChannel(vc.getName() + "  |  " + LFGHandler.createInvite(vc, evt.getAuthor()).getURL(), evt.getChannel());
                 Core.outLFGInfo(evt.getAuthor(), "Executed where for user " + args[0]);
             } else {
-                Core.sendMessageToChannel("The user is not in a LFG voice channel!", evt.getChannel());
+                Core.sendMessageToChannel("The user is not in a voice channel!", evt.getChannel());
             }
             Core.outLFGInfo(evt.getAuthor(), "Executed where for user " + args[0]);
             

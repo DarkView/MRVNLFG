@@ -53,7 +53,7 @@ public class Core {
     public static Vars VARS;
     private static List<String> BLOCKED_WORDS;
     private static final Logger LOGGER = LoggerFactory.getLogger(Core.class);
-    public static String VERSION = "1.4-RC2";
+    public static String VERSION = "1.4";
     private static MRVNMessage currentMessage;
 
     public static void main(String[] args) throws LoginException, InterruptedException {
