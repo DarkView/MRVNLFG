@@ -24,7 +24,7 @@ public class CMDListVars implements Command {
 
         for (Field field : fields) {
             String name = field.getName();
-            if (!(name.equals("OWNER_IDS") || name.equals("TOKEN"))) {
+            if (!(name.equals("OWNER_IDS") || name.equals("TOKEN") || name.contains("MYSQL"))) {
 
                 try {
 

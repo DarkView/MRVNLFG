@@ -8,8 +8,6 @@ package de.darkdl.mrvnbot;
 import static de.darkdl.mrvnbot.Core.outInfo;
 import java.util.HashMap;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.regex.Pattern;
 import net.dv8tion.jda.core.entities.Invite;
 import net.dv8tion.jda.core.entities.Member;
@@ -39,7 +37,11 @@ public class LFGHandler {
      * @param channel - The VoiceChannel object the user is currently in
      */
     public static void userConnected(String userID, VoiceChannel channel) {
-        CONNECTED_USERS.put(userID, channel.getId());
+        if (Core.VARS.MYSQL_ENABLED) {
+            Core.dbUserConnected(userID, channel.getId());
+        } else {
+            CONNECTED_USERS.put(userID, channel.getId());
+        }
     }
 
     /**
@@ -48,7 +50,19 @@ public class LFGHandler {
      * @param userID - The user that is to be removed
      */
     public static void userDisconnected(String userID) {
-        CONNECTED_USERS.remove(userID);
+        if (Core.VARS.MYSQL_ENABLED) {
+            Core.dbUserDisconnected(userID);
+        } else {
+            CONNECTED_USERS.remove(userID);
+        }
+    }
+
+    public static VoiceChannel getChannelForUserID(String userID) {
+        if (Core.VARS.MYSQL_ENABLED) {
+            return Core.bot.getVoiceChannelById(Core.dbGetChannel(userID));
+        } else {
+            return Core.bot.getVoiceChannelById(CONNECTED_USERS.getOrDefault(userID, "999999999999999999"));
+        }
     }
 
     /**
@@ -64,7 +78,7 @@ public class LFGHandler {
         User user = msg.getAuthor();
         Long startTime = System.currentTimeMillis();
 
-        VoiceChannel vc = Core.bot.getVoiceChannelById(CONNECTED_USERS.getOrDefault(user.getId(), "999999999999999999"));
+        VoiceChannel vc = getChannelForUserID(user.getId());
         if (vc != null && vc.getName().toLowerCase().contains(Core.VARS.LFG_VOICE_IDENTIFIER)) {
 
             int vcMembers = vc.getMembers().size();
@@ -220,7 +234,7 @@ public class LFGHandler {
     }
 
     public static VoiceChannel whereIsUser(String arg) {
-        VoiceChannel vc = Core.bot.getVoiceChannelById(CONNECTED_USERS.getOrDefault(arg, "999999999999999999"));
+        VoiceChannel vc = getChannelForUserID(arg);
         if (vc != null) {
             return vc;
         } else {

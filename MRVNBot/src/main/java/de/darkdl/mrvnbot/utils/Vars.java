@@ -5,7 +5,10 @@
  */
 package de.darkdl.mrvnbot.utils;
 
+import de.darkdl.mrvnbot.Core;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.Role;
 
@@ -26,11 +29,31 @@ public class Vars {
     public int INVITE_EXPIRE_SECONDS = 300;
     public boolean LIST_OTHER_USERS = true;
     public boolean MESSAGE_COMPACT = false;
+    public boolean MYSQL_ENABLED = false;
+    public Map<String, String> MYSQL_INFO;
 
     public void allToLowerCase() {
         LFG_VOICE_IDENTIFIER = LFG_VOICE_IDENTIFIER.toLowerCase();
         LFG_TEXT_IDENTIFIER = LFG_TEXT_IDENTIFIER.toLowerCase();
         LFG_COMMAND_IDENTIFIER = LFG_COMMAND_IDENTIFIER.toLowerCase();
+    }
+
+    public void initSQL() {
+
+        if (!MYSQL_INFO.containsKey("dbHost")) {
+            
+            Map<String, String> map = new HashMap<>();
+            map.put("dbHost", "mysql-db-url");
+            map.put("dbPort", "3306");
+            map.put("dbName", "mysql-db-name");
+            map.put("dbUser", "mysql-user-name");
+            map.put("dbPassword", "mysql-db-pw");
+            map.put("dbTableName", "mysql-table-name");
+            MYSQL_INFO = map;
+            Core.saveVars();
+            
+        }
+
     }
 
     public boolean isOwner(String userID) {

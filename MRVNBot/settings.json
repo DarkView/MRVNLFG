@@ -8,5 +8,14 @@
   "LFG_COMMAND_IDENTIFIER" : "!lfg",
   "INVITE_EXPIRE_SECONDS" : 300,
   "LIST_OTHER_USERS" : true,
-  "MESSAGE_COMPACT" : false
+  "MESSAGE_COMPACT" : true,
+  "MYSQL_ENABLED" : false,
+  "MYSQL_INFO" : {
+    "dbPort" : "",
+    "dbName" : "",
+    "dbUser" : "",
+    "dbHost" : "",
+    "dbPassword" : "",
+	"dbTableName" : ""
+  }
 }

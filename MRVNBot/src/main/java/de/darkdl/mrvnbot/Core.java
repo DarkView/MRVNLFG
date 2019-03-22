@@ -51,9 +51,11 @@ public class Core {
     private static JDABuilder builder;
     public static JDA bot;
     public static Vars VARS;
+    private static Connector conn = null;
     private static List<String> BLOCKED_WORDS;
     private static final Logger LOGGER = LoggerFactory.getLogger(Core.class);
-    public static String VERSION = "1.4";
+    public static String VERSION = "1.5";
+    
     private static MRVNMessage currentMessage;
 
     public static void main(String[] args) throws LoginException, InterruptedException {
@@ -62,10 +64,16 @@ public class Core {
 
         VARS = FileUtils.deserializeVars();
         VARS.allToLowerCase();
+        VARS.initSQL();
         outInfo("Loaded the config");
 
         BLOCKED_WORDS = FileUtils.deserializeBlocked();
         outInfo("Loaded blocked words");
+        
+        if (VARS.MYSQL_ENABLED) {
+            outInfo("We are in MySQL mode, connecting...");
+            conn = new Connector();
+        }
 
         if (VARS.TOKEN.equals("") || VARS.TOKEN == null) {
             outInfo("There is no token in the settings.json! Stopping...");
@@ -78,7 +86,7 @@ public class Core {
         builder.setAutoReconnect(true);
         builder.setContextEnabled(true);
         builder.setGame(Game.playing(VARS.LFG_COMMAND_IDENTIFIER));
-        
+
         outInfo("Scanning all voice-channels known...");
         bot = builder.buildBlocking();
         LFGHandler.loadVoiceChannels(bot.getVoiceChannels());
@@ -282,7 +290,7 @@ public class Core {
 
         currentMessage.setChannelAndMessageIDs(channels);
     }
-    
+
     public static void addChannels(String[] args) {
         Map<String, String> channels = currentMessage.getChannelAndMessageIDs();
 
@@ -370,6 +378,18 @@ public class Core {
 
     public static void unloadMessage() {
         currentMessage = new MRVNMessage();
+    }
+    
+    public static void dbUserConnected(String userID, String channelID) {
+        conn.userConnected(userID, channelID);
+    }
+    
+    public static void dbUserDisconnected(String userID) {
+        conn.userDiconnected(userID);
+    }
+
+    static String dbGetChannel(String userID) {
+        return conn.getChannel(userID);
     }
 
 }
