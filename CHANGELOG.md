@@ -1,4 +1,8 @@
+## **1.5**
 
+Added:
+
+- New option to connect to a database instead of using RAM, recommended for 50+ voice channels (Currently hard-coded for MySQL)
 
 ## **1.4**
 
