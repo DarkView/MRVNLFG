@@ -16,6 +16,8 @@ Be sure to change the variables in the settings.json file.
  - `INVITE_EXPIRE_SECONDS`: The time in seconds after which the invite should expire
  - `LIST_OTHER_USERS`: true if the other users in the voice channel of the requestor should be listed. Else set to false
  - `MESSAGE_COMPACT`: true if the compact style should be used for the invite messages
+ - `MYSQL_ENABLED`: Whether or not we want to connect to a database instead of using RAM. Recommended for 50+ voice channels. If the connection cant be established, the bot will automatically revert to RAM mode
+ - `MYSQL_INFO`: All the information needed for the connection: `dbPort, dbName, dbUser, dbHost, dbPassword, dbTableName`
  
 Public commands for this bot:
  - `<COMMAND_IDENTIFIER>`: If the command is sent in a channel with `<LFG_TEXT_IDENTIFIER>` and the user is in a channel with `<LFG_VOICE_IDENTIFIER>` in its name, the bot will create or reuse an invite into that channel and post it into the text channel
