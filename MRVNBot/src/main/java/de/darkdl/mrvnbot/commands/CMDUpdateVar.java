@@ -41,6 +41,12 @@ public class CMDUpdateVar implements Command {
             case "INVITE_EXPIRE_SECONDS":
                 Core.VARS.INVITE_EXPIRE_SECONDS = Integer.parseInt(input);
                 break;
+            case "MESSAGE_LINE_LIMIT":
+                Core.VARS.MESSAGE_LINE_LIMIT = Integer.parseInt(input);
+                break;
+            case "MESSAGE_CHARACTER_LIMIT":
+                Core.VARS.MESSAGE_CHARACTER_LIMIT = Integer.parseInt(input);
+                break;
             case "LIST_OTHER_USERS":
                 Core.VARS.LIST_OTHER_USERS = input.equals("true") || input.equals("1") || input.equals("t");
                 break;

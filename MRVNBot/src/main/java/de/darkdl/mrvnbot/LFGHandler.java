@@ -94,32 +94,39 @@ public class LFGHandler {
 
                 if (hasBlockedWord.equals("")) {
 
-                    try {
+                    msgContent = msgContent.replaceFirst("(?i)" + Core.VARS.LFG_COMMAND_IDENTIFIER, "");
+                    if (msgContent.length() <= Core.VARS.MESSAGE_CHARACTER_LIMIT && getNewLines(msgContent) <= Core.VARS.MESSAGE_LINE_LIMIT) {
+                        System.out.println(msgContent.length() + " | " + Core.VARS.MESSAGE_CHARACTER_LIMIT);
 
-                        msgContent = msgContent.replaceFirst("(?i)" + Core.VARS.LFG_COMMAND_IDENTIFIER, "");
-                        String channelInfo = "";
+                        try {
 
-                        if (!msgContent.equals("")) {
-                            if (Core.VARS.MESSAGE_COMPACT) {
-                                msgContent = "`".concat(msgContent.trim()).concat("`");
-                            } else {
-                                msgContent = "```".concat(msgContent.trim()).concat("```");
+                            String channelInfo = "";
+
+                            if (!msgContent.equals("")) {
+                                if (Core.VARS.MESSAGE_COMPACT) {
+                                    msgContent = "`".concat(msgContent.trim()).concat("`");
+                                } else {
+                                    msgContent = "```".concat(msgContent.trim()).concat("```");
+                                }
                             }
+
+                            channelInfo = handleMessageCreation(vc, user, msgContent);
+                            Core.sendMessageToChannel(channelInfo, channel);
+
+                            Core.outLFGInfo(user, "Succesfully completed LFG request");
+
+                            MESSAGE_DELAY[CURRENT_POS] = System.currentTimeMillis() - startTime;
+                            CURRENT_POS++;
+                            if (CURRENT_POS >= 5) {
+                                CURRENT_POS = 0;
+                            }
+
+                        } catch (RateLimitedException ex) {
+                            Core.outError(ex.getMessage(), ex);
                         }
-
-                        channelInfo = handleMessageCreation(vc, user, msgContent);
-                        Core.sendMessageToChannel(channelInfo, channel);
-
-                        Core.outLFGInfo(user, "Succesfully completed LFG request");
-
-                        MESSAGE_DELAY[CURRENT_POS] = System.currentTimeMillis() - startTime;
-                        CURRENT_POS++;
-                        if (CURRENT_POS >= 5) {
-                            CURRENT_POS = 0;
-                        }
-
-                    } catch (RateLimitedException ex) {
-                        Core.outError(ex.getMessage(), ex);
+                    } else {
+                        Core.sendMessageToChannel("Sorry, but that message is too long! " + user.getAsMention(), channel);
+                        Core.outLFGInfo(user, "Stopped LFG request, message exceeded character or newline limit");
                     }
 
                 } else {
@@ -240,6 +247,11 @@ public class LFGHandler {
         } else {
             return null;
         }
+    }
+
+    private static int getNewLines(String msgContent) {
+        String[] lines = msgContent.split("\r\n|\r|\n");
+        return lines.length;
     }
 
 }

@@ -55,7 +55,7 @@ public class Core {
     private static List<String> BLOCKED_WORDS;
     private static final Logger LOGGER = LoggerFactory.getLogger(Core.class);
     public static String VERSION = "1.5";
-    
+
     private static MRVNMessage currentMessage;
 
     public static void main(String[] args) throws LoginException, InterruptedException {
@@ -69,7 +69,7 @@ public class Core {
 
         BLOCKED_WORDS = FileUtils.deserializeBlocked();
         outInfo("Loaded blocked words");
-        
+
         if (VARS.MYSQL_ENABLED) {
             outInfo("We are in MySQL mode, connecting...");
             conn = new Connector();
@@ -334,9 +334,13 @@ public class Core {
                 msg.editMessage(currentMessage.getMessage()).queue();
 
                 if (toPin) {
-                    msg.pin().queue();
+                    if (!msg.isPinned()) {
+                        msg.pin().queue();
+                    }
                 } else {
-                    msg.unpin().queue();
+                    if (msg.isPinned()) {
+                        msg.pin().queue();
+                    }
                 }
 
             } else {
@@ -379,11 +383,11 @@ public class Core {
     public static void unloadMessage() {
         currentMessage = new MRVNMessage();
     }
-    
+
     public static void dbUserConnected(String userID, String channelID) {
         conn.userConnected(userID, channelID);
     }
-    
+
     public static void dbUserDisconnected(String userID) {
         conn.userDiconnected(userID);
     }

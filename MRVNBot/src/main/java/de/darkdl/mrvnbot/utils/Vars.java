@@ -27,6 +27,8 @@ public class Vars {
     public String LFG_TEXT_IDENTIFIER = "";
     public String LFG_COMMAND_IDENTIFIER = "";
     public int INVITE_EXPIRE_SECONDS = 300;
+    public int MESSAGE_LINE_LIMIT = 5;
+    public int MESSAGE_CHARACTER_LIMIT = 150;
     public boolean LIST_OTHER_USERS = true;
     public boolean MESSAGE_COMPACT = false;
     public boolean MYSQL_ENABLED = false;
