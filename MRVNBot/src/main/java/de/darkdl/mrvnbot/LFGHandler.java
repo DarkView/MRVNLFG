@@ -119,6 +119,15 @@ public class LFGHandler {
                             CURRENT_POS++;
                             if (CURRENT_POS >= 5) {
                                 CURRENT_POS = 0;
+                                long avg = 0;
+                                for (long l : MESSAGE_DELAY) {
+                                    avg += l;
+                                }
+                                avg = avg / 5;
+                                if (avg >= 1000) {
+                                    Core.outInfoChannel("**I am currently experiencing extremely high delays! " + avg +"ms\n"
+                                            + "Please forward this information to the Admins/Owners!**");
+                                }
                             }
 
                         } catch (RateLimitedException ex) {

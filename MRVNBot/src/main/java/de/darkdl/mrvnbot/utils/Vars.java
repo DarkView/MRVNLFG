@@ -26,6 +26,7 @@ public class Vars {
     public String LFG_VOICE_IDENTIFIER = "";
     public String LFG_TEXT_IDENTIFIER = "";
     public String LFG_COMMAND_IDENTIFIER = "";
+    public String INFO_CHANNEL_ID = "";
     public int INVITE_EXPIRE_SECONDS = 300;
     public int MESSAGE_LINE_LIMIT = 5;
     public int MESSAGE_CHARACTER_LIMIT = 150;

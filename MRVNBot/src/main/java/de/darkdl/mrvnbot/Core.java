@@ -35,6 +35,7 @@ import net.dv8tion.jda.core.entities.Game;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.MessageChannel;
 import net.dv8tion.jda.core.entities.MessageEmbed;
+import net.dv8tion.jda.core.entities.TextChannel;
 import net.dv8tion.jda.core.entities.User;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -52,9 +53,10 @@ public class Core {
     public static JDA bot;
     public static Vars VARS;
     private static Connector conn = null;
+    private static TextChannel infoChannel = null;
     private static List<String> BLOCKED_WORDS;
     private static final Logger LOGGER = LoggerFactory.getLogger(Core.class);
-    public static String VERSION = "1.5";
+    public static String VERSION = "1.6-beta1";
 
     private static MRVNMessage currentMessage;
 
@@ -70,16 +72,16 @@ public class Core {
         BLOCKED_WORDS = FileUtils.deserializeBlocked();
         outInfo("Loaded blocked words");
 
-        if (VARS.MYSQL_ENABLED) {
-            outInfo("We are in MySQL mode, connecting...");
-            conn = new Connector();
-        }
-
         if (VARS.TOKEN.equals("") || VARS.TOKEN == null) {
             outInfo("There is no token in the settings.json! Stopping...");
             System.exit(0);
         }
-
+        
+        if (VARS.MYSQL_ENABLED) {
+            outInfo("We are in MySQL mode, connecting...");
+            conn = new Connector();
+        }
+        
         builder = new JDABuilder(AccountType.BOT);
 
         builder.setToken(VARS.TOKEN);
@@ -89,11 +91,18 @@ public class Core {
 
         outInfo("Scanning all voice-channels known...");
         bot = builder.buildBlocking();
+        
+        if (!VARS.INFO_CHANNEL_ID.equals("")) {
+            infoChannel = bot.getTextChannelById(VARS.INFO_CHANNEL_ID);
+        }
+        outInfoChannel("Loading... Scanning all voice-channels");
+        
         LFGHandler.loadVoiceChannels(bot.getVoiceChannels());
         addListeners();
         addCommands();
 
         outInfo("Done loading! [Took " + (System.currentTimeMillis() - startTime) + "ms]");
+        outInfoChannel("Done loading!");
     }
 
     /**
@@ -374,6 +383,12 @@ public class Core {
 
     public static void postMRVNMessageInfo(MessageChannel channel) {
         sendMessageToChannel(currentMessage.toString(), channel);
+    }
+    
+    public static void outInfoChannel(String s) {
+        if (infoChannel != null) {
+            infoChannel.sendMessage(s).queue();
+        }
     }
 
     public static void setPin(boolean b) {
