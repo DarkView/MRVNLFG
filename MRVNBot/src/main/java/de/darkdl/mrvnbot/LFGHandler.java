@@ -5,6 +5,7 @@
  */
 package de.darkdl.mrvnbot;
 
+import static de.darkdl.mrvnbot.Core.bot;
 import static de.darkdl.mrvnbot.Core.outInfo;
 import java.util.HashMap;
 import java.util.List;
@@ -120,10 +121,10 @@ public class LFGHandler {
                             if (CURRENT_POS >= 5) {
                                 CURRENT_POS = 0;
                                 long avg = 0;
-                                for (long l : MESSAGE_DELAY) {
-                                    avg += l;
+                                for (int i = 0; i < MESSAGE_DELAY.length; i++) {
+                                    avg += MESSAGE_DELAY[i];
                                 }
-                                avg = avg / 5;
+                                avg = avg / MESSAGE_DELAY.length;
                                 if (avg >= 1000) {
                                     Core.outInfoChannel("**I am currently experiencing extremely high delays! " + avg +"ms\n"
                                             + "Please forward this information to the Admins/Owners!**");
@@ -161,17 +162,18 @@ public class LFGHandler {
      *
      * @param channels - A list of all channels to be loaded
      */
-    static void loadVoiceChannels(List<VoiceChannel> channels) {
+    static void loadVoiceChannels() {
 
-        for (VoiceChannel c : channels) {
-
-            List<Member> members = c.getMembers();
+        List<VoiceChannel> channels = bot.getVoiceChannels();
+        
+        for (VoiceChannel channel : channels) {
+            List<Member> members = channel.getMembers();
             for (Member m : members) {
-                userConnected(m.getUser().getId(), c);
+                userConnected(m.getUser().getId(), channel);
             }
-
         }
 
+        channels = null;
         outInfo("Done scanning!");
 
     }

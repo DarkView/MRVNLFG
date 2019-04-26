@@ -35,6 +35,7 @@ public class MessageListener extends ListenerAdapter {
         if (msg.getChannel().getName().contains(Core.VARS.LFG_TEXT_IDENTIFIER)
                 && msgContent.toLowerCase().startsWith(Core.VARS.LFG_COMMAND_IDENTIFIER)) {
 
+            msg.getChannel().sendTyping().complete();
             Core.outLFGInfo(msg.getAuthor(), "Started LFG request in " + msg.getChannel().getName());
             LFGHandler.createLFG(msg, msg.getChannel());
 

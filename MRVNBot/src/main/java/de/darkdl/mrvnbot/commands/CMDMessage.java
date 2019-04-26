@@ -48,9 +48,15 @@ public class CMDMessage implements Command {
                     Core.setPin((args[1].equals("t") || args[1].equals("true")) || args[1].equals("1"));
                     break;
                 case "post":
+                    evt.getChannel().sendTyping().complete();
+                    Core.postMessage();
+                    break;
+                case "edit":
+                    evt.getChannel().sendTyping().complete();
                     Core.postMessage();
                     break;
                 case "delete":
+                    evt.getChannel().sendTyping().complete();
                     Core.deleteMrvnMessage();
                     break;
                 case "info":

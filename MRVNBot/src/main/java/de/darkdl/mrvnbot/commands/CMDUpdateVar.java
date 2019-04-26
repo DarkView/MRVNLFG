@@ -38,6 +38,9 @@ public class CMDUpdateVar implements Command {
             case "LFG_COMMAND_IDENTIFIER":
                 Core.VARS.LFG_COMMAND_IDENTIFIER = input;
                 break;
+            case "INFO_CHANNEL_ID":
+                Core.VARS.INFO_CHANNEL_ID = input;
+                break;
             case "INVITE_EXPIRE_SECONDS":
                 Core.VARS.INVITE_EXPIRE_SECONDS = Integer.parseInt(input);
                 break;

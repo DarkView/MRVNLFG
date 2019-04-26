@@ -56,7 +56,7 @@ public class Core {
     private static TextChannel infoChannel = null;
     private static List<String> BLOCKED_WORDS;
     private static final Logger LOGGER = LoggerFactory.getLogger(Core.class);
-    public static String VERSION = "1.6-beta1";
+    public static String VERSION = "1.6";
 
     private static MRVNMessage currentMessage;
 
@@ -97,7 +97,7 @@ public class Core {
         }
         outInfoChannel("Loading... Scanning all voice-channels");
         
-        LFGHandler.loadVoiceChannels(bot.getVoiceChannels());
+        LFGHandler.loadVoiceChannels();
         addListeners();
         addCommands();
 
@@ -386,9 +386,9 @@ public class Core {
     }
     
     public static void outInfoChannel(String s) {
-        if (infoChannel != null) {
-            infoChannel.sendMessage(s).queue();
-        }
+        //if (infoChannel != null) {
+        //    infoChannel.sendMessage(s).queue();
+        //}
     }
 
     public static void setPin(boolean b) {
