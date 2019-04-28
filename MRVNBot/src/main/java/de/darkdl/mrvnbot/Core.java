@@ -14,6 +14,7 @@ import de.darkdl.mrvnbot.commands.CMDDelay;
 import de.darkdl.mrvnbot.commands.CMDListBlocked;
 import de.darkdl.mrvnbot.commands.CMDListVars;
 import de.darkdl.mrvnbot.commands.CMDMessage;
+import de.darkdl.mrvnbot.commands.CMDNotify;
 import de.darkdl.mrvnbot.commands.CMDReload;
 import de.darkdl.mrvnbot.commands.CMDRemoveBlocked;
 import de.darkdl.mrvnbot.commands.CMDUpdateVar;
@@ -53,10 +54,10 @@ public class Core {
     public static JDA bot;
     public static Vars VARS;
     private static Connector conn = null;
-    private static TextChannel infoChannel = null;
+    public static TextChannel infoChannel = null;
     private static List<String> BLOCKED_WORDS;
     private static final Logger LOGGER = LoggerFactory.getLogger(Core.class);
-    public static String VERSION = "1.6";
+    public static String VERSION = "1.7-beta1";
 
     private static MRVNMessage currentMessage;
 
@@ -127,6 +128,10 @@ public class Core {
         CommandHandler.commands.put("delay", new CMDDelay());
         CommandHandler.commands.put("message", new CMDMessage());
         CommandHandler.commands.put("where", new CMDWhere());
+        CommandHandler.commands.put("w", new CMDWhere());
+        CommandHandler.commands.put("notify", new CMDNotify());
+        CommandHandler.commands.put("notif", new CMDNotify());
+        CommandHandler.commands.put("n", new CMDNotify());
     }
 
     /**
@@ -391,8 +396,9 @@ public class Core {
         //}
     }
 
-    public static void setPin(boolean b) {
+    public static boolean setPin(boolean b) {
         currentMessage.setPin(b);
+        return b;
     }
 
     public static void unloadMessage() {
@@ -410,5 +416,5 @@ public class Core {
     static String dbGetChannel(String userID) {
         return conn.getChannel(userID);
     }
-
+    
 }

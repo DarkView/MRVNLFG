@@ -52,7 +52,7 @@ public class MRVNMessage {
 
     @Override
     public String toString() {
-        return "**Title:** `" + title + "`\n**Message:** ```" + message + "```\n**Channel|Message IDs:** `" + channelAndMessageIDs + "`";
+        return "**Title:** `" + title + "`\n**Message:** ```" + message + "```\n**Channel|Message IDs:** ```" + channelAndMessageIDs + "```";
     }
     
 }
