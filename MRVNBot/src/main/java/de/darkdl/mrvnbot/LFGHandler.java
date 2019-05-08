@@ -35,13 +35,13 @@ public class LFGHandler {
      *
      * @param userID - The snowflake of the user for which the association is to
      * be added or overwritten
-     * @param channel - The VoiceChannel object the user is currently in
+     * @param channelID - The snowflake of the channel the user is in
      */
-    public static void userConnected(String userID, VoiceChannel channel) {
+    public static void userConnected(String userID, String channelID) {
         if (Core.VARS.MYSQL_ENABLED) {
-            Core.dbUserConnected(userID, channel.getId());
+            Core.dbUserConnected(userID, channelID);
         } else {
-            CONNECTED_USERS.put(userID, channel.getId());
+            CONNECTED_USERS.put(userID, channelID);
         }
     }
 
@@ -169,10 +169,10 @@ public class LFGHandler {
         for (VoiceChannel channel : channels) {
             List<Member> members = channel.getMembers();
             for (Member m : members) {
-                userConnected(m.getUser().getId(), channel);
+                userConnected(m.getUser().getId(), channel.getId());
             }
         }
-
+        
         channels = null;
         outInfo("Done scanning!");
 

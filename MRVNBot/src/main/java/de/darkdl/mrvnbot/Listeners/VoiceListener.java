@@ -29,6 +29,8 @@ public class VoiceListener extends ListenerAdapter {
     private static ArrayList<NotifyInfo> activeNotifies = new ArrayList<>();
     private static Timer timer = new Timer("MRVN-NotifTimer");
 
+    private static String SEPARATOR = " - ";
+
     /**
      * Calls for an overwrite/add of the user and his channel if it matches the
      * identifier for channels
@@ -39,7 +41,7 @@ public class VoiceListener extends ListenerAdapter {
     public void onGuildVoiceJoin(GuildVoiceJoinEvent evt) {
 
         String userID = evt.getMember().getUser().getId();
-        LFGHandler.userConnected(userID, evt.getChannelJoined());
+        LFGHandler.userConnected(userID, evt.getChannelJoined().getId());
         sendNotifiesForUser(userID);
 
     }
@@ -56,7 +58,7 @@ public class VoiceListener extends ListenerAdapter {
     public void onGuildVoiceMove(GuildVoiceMoveEvent evt) {
 
         String userID = evt.getMember().getUser().getId();
-        LFGHandler.userConnected(userID, evt.getChannelJoined());
+        LFGHandler.userConnected(userID, evt.getChannelJoined().getId());
         sendNotifiesForUser(userID);
 
     }
@@ -74,18 +76,21 @@ public class VoiceListener extends ListenerAdapter {
 
     }
 
-    public static void addNotify(String userID, User modUser) {
-        NotifyInfo newNotif = new NotifyInfo(modUser, userID);
+    public static void addNotify(String userID, User modUser, int expire) {
+        NotifyInfo newNotif = new NotifyInfo(modUser, userID, System.currentTimeMillis() + (expire * 1000));
         activeNotifies.add(newNotif);
 
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
-                removeNotifiesForNotifID(newNotif.getId());
-                Core.sendMessageToChannel("The notification for <@!" + userID + "> requested by " + modUser.getName() + " expired.", Core.infoChannel);
+                if (removeNotifiesForNotifID(newNotif.getId())) {
+                    Core.sendMessageToChannel("The notification for <@!" + userID + "> requested by " + modUser.getName() + " expired.", Core.infoChannel);
+                }
             }
-        }, Core.VARS.NOTIF_EXPIRE_SECONDS * 1000);
+        }, expire * 1000);
+        timer.purge();
 
+        Core.outLFGInfo(modUser, "Executed notify for " + userID + " for " + expire + " seconds");
     }
 
     public static void removeNotifiesForMod(User modUser) {
@@ -110,26 +115,56 @@ public class VoiceListener extends ListenerAdapter {
         activeNotifies = replacement;
     }
 
-    public static void removeNotifiesForNotifID(int notifID) {
+    public static boolean removeNotifiesForNotifID(int notifID) {
         ArrayList<NotifyInfo> replacement = new ArrayList<>();
+        boolean removed = false;
 
         for (NotifyInfo notify : activeNotifies) {
             if (notify.getId() != notifID) {
                 replacement.add(notify);
+            } else {
+                removed = true;
             }
         }
         activeNotifies = replacement;
+        return removed;
     }
 
     public static void sendNotifiesForUser(String userID) {
         for (NotifyInfo notif : activeNotifies) {
             if (notif.getUserID().equals(userID)) {
                 Core.outInfo("Notification tripped. User: " + userID + " | Moderator: " + notif.getModUser().getId());
-                CMDWhere.sendWhere(userID, Core.infoChannel, notif.getModUser(), "The user <@!"
-                        + userID + "> joined the below channel <@!" + notif.getModUser().getId() + ">");
+                CMDWhere.sendWhere(userID, Core.infoChannel, notif.getModUser(), "<@!" + notif.getModUser().getId() + ">, the user <@!"
+                        + userID + "> joined this channel:");
             }
         }
         removeNotifiesForUserID(userID);
+    }
+
+    public static String listNotifies() {
+
+        StringBuilder listBuilder = new StringBuilder();
+
+        if (activeNotifies.size() > 0) {
+
+            listBuilder.append("Listing `").append(activeNotifies.size()).append("` notifications:\n");
+            listBuilder.append("Notify ID - User ID - Requestor - Time Remaining\n");
+            long requestTime = System.currentTimeMillis();
+
+            for (NotifyInfo notify : activeNotifies) {
+                long timeLeft = notify.getStartTime() - requestTime;
+                listBuilder.append(String.format("%1s" + SEPARATOR, notify.getId()));
+                listBuilder.append(String.format("%1s" + SEPARATOR, notify.getUserID()));
+                listBuilder.append(String.format("%1s" + SEPARATOR, notify.getModUser().getName()));
+                listBuilder.append(timeLeft / 1000);
+                listBuilder.append(" seconds\n");
+            }
+
+        } else {
+            listBuilder.append("There are currently no active notifications.");
+        }
+
+        return listBuilder.toString();
     }
 
 }

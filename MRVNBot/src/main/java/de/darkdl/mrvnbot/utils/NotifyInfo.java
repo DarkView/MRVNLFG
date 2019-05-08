@@ -15,13 +15,15 @@ public class NotifyInfo {
     
     private User modUser;
     private String userID;
+    private long endTime;
     
     private int id;
     private static int nextId;
 
-    public NotifyInfo(User modUser, String userID) {
+    public NotifyInfo(User modUser, String userID, long endTime) {
         this.modUser = modUser;
         this.userID = userID;
+        this.endTime = endTime;
         
         this.id = nextId;
         nextId++;
@@ -37,6 +39,10 @@ public class NotifyInfo {
 
     public int getId() {
         return id;
+    }
+
+    public long getStartTime() {
+        return endTime;
     }
     
 }

@@ -18,6 +18,7 @@ import de.darkdl.mrvnbot.commands.CMDNotify;
 import de.darkdl.mrvnbot.commands.CMDReload;
 import de.darkdl.mrvnbot.commands.CMDRemoveBlocked;
 import de.darkdl.mrvnbot.commands.CMDUpdateVar;
+import de.darkdl.mrvnbot.commands.CMDUptime;
 import de.darkdl.mrvnbot.commands.CMDVersion;
 import de.darkdl.mrvnbot.commands.CMDWhere;
 import de.darkdl.mrvnbot.utils.CommandHandler;
@@ -57,13 +58,14 @@ public class Core {
     public static TextChannel infoChannel = null;
     private static List<String> BLOCKED_WORDS;
     private static final Logger LOGGER = LoggerFactory.getLogger(Core.class);
-    public static String VERSION = "1.7-beta1";
+    public static String VERSION = "1.7";
+    public static long bootTime;
 
     private static MRVNMessage currentMessage;
 
     public static void main(String[] args) throws LoginException, InterruptedException {
         outInfo("Starting up " + VERSION + "...");
-        long startTime = System.currentTimeMillis();
+        bootTime = System.currentTimeMillis();
 
         VARS = FileUtils.deserializeVars();
         VARS.allToLowerCase();
@@ -102,8 +104,9 @@ public class Core {
         addListeners();
         addCommands();
 
-        outInfo("Done loading! [Took " + (System.currentTimeMillis() - startTime) + "ms]");
+        outInfo("Done loading! [Took " + (System.currentTimeMillis() - bootTime) + "ms]");
         outInfoChannel("Done loading!");
+        java.lang.System.gc();
     }
 
     /**
@@ -120,6 +123,7 @@ public class Core {
     private static void addCommands() {
         CommandHandler.commands.put("reload", new CMDReload());
         CommandHandler.commands.put("version", new CMDVersion());
+        CommandHandler.commands.put("uptime", new CMDUptime());
         CommandHandler.commands.put("updatevar", new CMDUpdateVar());
         CommandHandler.commands.put("listvars", new CMDListVars());
         CommandHandler.commands.put("addblocked", new CMDAddBlocked());
