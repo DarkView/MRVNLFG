@@ -6,7 +6,6 @@
 package de.darkdl.mrvnbot.listeners;
 
 import de.darkdl.mrvnbot.Core;
-import de.darkdl.mrvnbot.LFGHandler;
 import de.darkdl.mrvnbot.commands.moderation.CMDWhere;
 import de.darkdl.mrvnbot.utils.NotifyInfo;
 import java.util.ArrayList;
@@ -14,7 +13,6 @@ import java.util.Timer;
 import java.util.TimerTask;
 import net.dv8tion.jda.core.entities.User;
 import net.dv8tion.jda.core.events.guild.voice.GuildVoiceJoinEvent;
-import net.dv8tion.jda.core.events.guild.voice.GuildVoiceLeaveEvent;
 import net.dv8tion.jda.core.events.guild.voice.GuildVoiceMoveEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
 
@@ -40,9 +38,7 @@ public class VoiceListener extends ListenerAdapter {
     @Override
     public void onGuildVoiceJoin(GuildVoiceJoinEvent evt) {
 
-        String userID = evt.getMember().getUser().getId();
-        LFGHandler.userConnected(userID, evt.getChannelJoined().getId());
-        sendNotifiesForUser(userID);
+        sendNotifiesForUser(evt.getMember().getUser().getId());
 
     }
 
@@ -57,25 +53,16 @@ public class VoiceListener extends ListenerAdapter {
     @Override
     public void onGuildVoiceMove(GuildVoiceMoveEvent evt) {
 
-        String userID = evt.getMember().getUser().getId();
-        LFGHandler.userConnected(userID, evt.getChannelJoined().getId());
-        sendNotifiesForUser(userID);
+        sendNotifiesForUser(evt.getMember().getUser().getId());
 
     }
 
     /**
-     * Calls for removal of the user from the Map, even if they were not in the
-     * LFG channels anymore
-     *
-     * @param evt - The event passed on by JDA
+     * Adds a notifier for the specified userID once the user switches channel
+     * @param userID - the userID we want to get notified about
+     * @param modUser - the Mod User object that requests the notification
+     * @param expire - after what amount of time the notification should expire
      */
-    @Override
-    public void onGuildVoiceLeave(GuildVoiceLeaveEvent evt) {
-
-        LFGHandler.userDisconnected(evt.getMember().getUser().getId());
-
-    }
-
     public static void addNotify(String userID, User modUser, int expire) {
         NotifyInfo newNotif = new NotifyInfo(modUser, userID, System.currentTimeMillis() + (expire * 1000));
         activeNotifies.add(newNotif);
@@ -93,6 +80,10 @@ public class VoiceListener extends ListenerAdapter {
         Core.outLFGInfo(modUser, "Executed notify for " + userID + " for " + expire + " seconds");
     }
 
+    /**
+     * Removes all of the notifications a specific mod requested
+     * @param modUser - the User of which we want to remove all notifications
+     */
     public static void removeNotifiesForMod(User modUser) {
         ArrayList<NotifyInfo> replacement = new ArrayList<>();
 
@@ -104,6 +95,10 @@ public class VoiceListener extends ListenerAdapter {
         activeNotifies = replacement;
     }
 
+    /**
+     * Removes all of the notifications for a specific UserID
+     * @param userId - The userID which we no longer want to get notified about
+     */
     public static void removeNotifiesForUserID(String userId) {
         ArrayList<NotifyInfo> replacement = new ArrayList<>();
 
@@ -115,6 +110,11 @@ public class VoiceListener extends ListenerAdapter {
         activeNotifies = replacement;
     }
 
+    /**
+     * Removes a specific notification via its ID
+     * @param notifID - the notification ID we want to remove
+     * @return true if we succeeded.
+     */
     public static boolean removeNotifiesForNotifID(int notifID) {
         ArrayList<NotifyInfo> replacement = new ArrayList<>();
         boolean removed = false;
@@ -130,6 +130,10 @@ public class VoiceListener extends ListenerAdapter {
         return removed;
     }
 
+    /**
+     * Sends all of the relevant notifications for a user
+     * @param userID - the user that tripped his notifications
+     */
     public static void sendNotifiesForUser(String userID) {
         for (NotifyInfo notif : activeNotifies) {
             if (notif.getUserID().equals(userID)) {
@@ -141,6 +145,10 @@ public class VoiceListener extends ListenerAdapter {
         removeNotifiesForUserID(userID);
     }
 
+    /**
+     * Lists all of the notifications currently active
+     * @return a String representation of all of the list of all notifications
+     */
     public static String listNotifies() {
 
         StringBuilder listBuilder = new StringBuilder();

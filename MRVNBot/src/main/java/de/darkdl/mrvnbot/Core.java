@@ -34,6 +34,7 @@ import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.JDABuilder;
 import net.dv8tion.jda.core.entities.Channel;
 import net.dv8tion.jda.core.entities.Game;
+import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.MessageChannel;
 import net.dv8tion.jda.core.entities.MessageEmbed;
@@ -54,11 +55,10 @@ public class Core {
     private static JDABuilder builder;
     public static JDA bot;
     public static Vars VARS;
-    private static Connector conn = null;
     public static TextChannel infoChannel = null;
     private static List<String> BLOCKED_WORDS;
     private static final Logger LOGGER = LoggerFactory.getLogger(Core.class);
-    public static String VERSION = "1.7";
+    public static String VERSION = "1.8-beta2";
     public static long bootTime;
 
     private static MRVNMessage currentMessage;
@@ -69,7 +69,6 @@ public class Core {
 
         VARS = FileUtils.deserializeVars();
         VARS.allToLowerCase();
-//        VARS.initSQL();
         outInfo("Loaded the config");
 
         BLOCKED_WORDS = FileUtils.deserializeBlocked();
@@ -80,11 +79,6 @@ public class Core {
             System.exit(0);
         }
         
-//        if (VARS.MYSQL_ENABLED) {
-//            outInfo("We are in MySQL mode, connecting...");
-//            conn = new Connector();
-//        }
-        
         builder = new JDABuilder(AccountType.BOT);
 
         builder.setToken(VARS.TOKEN);
@@ -92,14 +86,11 @@ public class Core {
         builder.setContextEnabled(true);
         builder.setGame(Game.playing(VARS.LFG_COMMAND_IDENTIFIER));
 
-//        outInfo("Scanning all voice-channels known...");
-        bot = builder.buildBlocking();
-        
+        bot = builder.build().awaitReady();
         if (!VARS.INFO_CHANNEL_ID.equals("")) {
             infoChannel = bot.getTextChannelById(VARS.INFO_CHANNEL_ID);
         }
         
-//        LFGHandler.loadVoiceChannels();
         addListeners();
         addCommands();
 
@@ -214,53 +205,93 @@ public class Core {
         return uInf;
     }
 
+    /**
+     * Loads the .json settings file and properly imports it
+     */
     public static void updateVars() {
         VARS = FileUtils.deserializeVars();
         VARS.allToLowerCase();
     }
 
+    /**
+     * Used to create the settings.json file (if it doesnt exit)
+     */
     public static void createVarsFile() {
         VARS = new Vars();
         FileUtils.serializeVars(VARS);
     }
 
+    /**
+     * Used to save changes made to the settings to the .json
+     */
     public static void saveVars() {
         FileUtils.serializeVars(VARS);
     }
 
+    /**
+     * Retrieves the currently loaded list of blocked words/regexs
+     * @return a List with all the blocke words/regexes
+     */
     public static List<String> getBlockedWords() {
         return BLOCKED_WORDS;
     }
 
+    /**
+     * Adds a blocked word/regex to the filter and saves it
+     * @param regex - the (optionally regex) term to add to the block list
+     */
     public static void addBlockedWord(String regex) {
         BLOCKED_WORDS.add(regex);
         saveBlocked();
     }
 
+    /**
+     * Removes a blocked word/regex from the filter and saves it
+     * @param toRemove - the exact term/word/regex to remove, no deviance permitted
+     * @return true if removed successfully
+     */
     public static boolean removeBlockedWord(String toRemove) {
         boolean success = BLOCKED_WORDS.remove(toRemove);
         saveBlocked();
         return success;
     }
 
+    /**
+     * Reloads the blocked word list from the blocked words file
+     */
     public static void updateBlocked() {
         BLOCKED_WORDS = FileUtils.deserializeBlocked();
     }
 
+    /**
+     * Creates the blocked words file if it doesnt exist
+     * With "(?i)n[il1]gg(er|a|@)" as a default regex
+     */
     public static void createBlockedFile() {
         BLOCKED_WORDS = new ArrayList<>();
         BLOCKED_WORDS.add("(?i)n[il1]gg(er|a|@)");
         FileUtils.serializeBlocked(BLOCKED_WORDS);
     }
 
+    /**
+     * Saves the blocked words to the blocked words file
+     */
     public static void saveBlocked() {
         FileUtils.serializeBlocked(BLOCKED_WORDS);
     }
 
+    /**
+     * Gets the delay for the bots last hearbeat
+     * @return - the delay of the bots last heartbeat
+     */
     public static long getPing() {
         return bot.getPing();
     }
 
+    /**
+     * Queries githubs API to retreive the latest (non-pre-release) version number
+     * @return - a String with the latest version number
+     */
     public static String getLatestStableVersion() {
         try {
 
@@ -279,15 +310,28 @@ public class Core {
         return "Error";
     }
 
+    /**
+     * Creates a new MRVN Message
+     * @param title - The messages title (filename)
+     */
     public static void newMRVNMessage(String title) {
         currentMessage = new MRVNMessage();
         currentMessage.setTitle(title);
     }
 
+    /**
+     * Loads an existing MRVN Message
+     * @param toLoad - The title of the message to load
+     */
     public static void loadMRVNMessage(String toLoad) {
         currentMessage = FileUtils.deserializeMRVNMessage(toLoad);
     }
 
+    /**
+     * Sets (overrides) the channels the message will be posted to
+     * Putting a "c" in front of the ID tells the bot to resolve a category ID to channel IDs
+     * @param args - The channel IDs of the channels to send to
+     */
     public static void setMRVNMessageChannels(String[] args) {
         Map<String, String> channels = new HashMap<>();
 
@@ -307,6 +351,10 @@ public class Core {
         currentMessage.setChannelAndMessageIDs(channels);
     }
 
+    /**
+     * Adds (does NOT override) channels the message will be posted to
+     * @param args - the channels or categorys to add
+     */
     public static void addMRVNMessageChannels(String[] args) {
         Map<String, String> channels = currentMessage.getChannelAndMessageIDs();
 
@@ -326,6 +374,10 @@ public class Core {
         currentMessage.setChannelAndMessageIDs(channels);
     }
 
+    /**
+     * Sets the message that will be posted
+     * @param args - The message
+     */
     public static void setMRVNMessageMessage(String[] args) {
         StringBuilder sb = new StringBuilder();
 
@@ -336,6 +388,9 @@ public class Core {
         currentMessage.setMessage(sb.toString());
     }
 
+    /**
+     * Posts or edit the message to all channels that have been set
+     */
     public static void postMRVNMessageMessage() {
         Map<String, String> channelAndMessageIDs = currentMessage.getChannelAndMessageIDs();
         Set<String> keySet = channelAndMessageIDs.keySet();
@@ -371,6 +426,9 @@ public class Core {
         }
     }
 
+    /**
+     * Deletes the message from all channels 
+     */
     public static void deleteMrvnMessage() {
         Map<String, String> channelAndMessageIDs = currentMessage.getChannelAndMessageIDs();
         Map<String, String> newIDs = new HashMap<>();
@@ -384,33 +442,45 @@ public class Core {
         currentMessage.setChannelAndMessageIDs(newIDs);
     }
 
+    /**
+     * Saves the message to its file
+     */
     public static void saveMRVNMessage() {
         FileUtils.serializeMRVNMessage(currentMessage);
     }
 
+    /**
+     * Displays all the information of the current message
+     * @param channel - the channel to post it to
+     */
     public static void postMRVNMessageInfo(MessageChannel channel) {
         sendMessageToChannel(currentMessage.toString(), channel);
     }
 
+    /**
+     * Sets whether or not the message should be pinned
+     * @param b - true if yes
+     * @return param b
+     */
     public static boolean setMRVNMessagePin(boolean b) {
         currentMessage.setPin(b);
         return b;
     }
 
+    /**
+     * Unloads the message to prevent accidental edits
+     */
     public static void unloadMRVNMessage() {
         currentMessage = new MRVNMessage();
     }
-
-//    public static void dbUserConnected(String userID, String channelID) {
-//        conn.userConnected(userID, channelID);
-//    }
-//
-//    public static void dbUserDisconnected(String userID) {
-//        conn.userDiconnected(userID);
-//    }
-//
-//    static String dbGetChannel(String userID) {
-//        return conn.getChannel(userID);
-//    }
+    
+    /**
+     * Returns the Member object for the specified userID (if we have a mutual guild)
+     * @param userID - The userID we want to get the Member object of
+     * @return the member object
+     */
+    public static Member getMemberForID(String userID) {
+        return bot.getUserById(userID).getMutualGuilds().get(0).getMemberById(userID);
+    }
     
 }

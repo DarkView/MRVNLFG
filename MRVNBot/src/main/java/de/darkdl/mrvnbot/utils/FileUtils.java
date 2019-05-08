@@ -21,6 +21,10 @@ public class FileUtils {
     private static final File VARS_FILE = new File("settings.json");
     private static final File BLOCKED_FILE = new File("blocked-words.json");
 
+    /**
+     * Serializes/saves the variables (settings) to a file
+     * @param v - The Vars object we want to save
+     */
     public static void serializeVars(Vars v) {
 
         ObjectMapper mapper = new ObjectMapper();
@@ -35,6 +39,10 @@ public class FileUtils {
 
     }
 
+    /**
+     * Deserializes/loads the settings file
+     * @return the Vars object we loaded
+     */
     public static Vars deserializeVars() {
 
         ObjectMapper mapper = new ObjectMapper();
@@ -52,6 +60,10 @@ public class FileUtils {
         return null;
     }
 
+    /**
+     * Serializes/saves the blocked words to a file
+     * @param l - the list of blocked words we want to save
+     */
     public static void serializeBlocked(List<String> l) {
 
         ObjectMapper mapper = new ObjectMapper();
@@ -66,6 +78,10 @@ public class FileUtils {
 
     }
 
+    /**
+     * Deserializes/loads the blocked words file
+     * @return a List representation of the blocked words we loaded
+     */
     public static List<String> deserializeBlocked() {
 
         ObjectMapper mapper = new ObjectMapper();
@@ -84,6 +100,11 @@ public class FileUtils {
         return null;
     }
     
+    /**
+     * Serializes/saves a specific mrvn message to a file
+     * @param msg - the MRVN Message Object we want to save
+     * @return true if we succeeded in saving
+     */
     public static boolean serializeMRVNMessage(MRVNMessage msg) {
 
         ObjectMapper mapper = new ObjectMapper();
@@ -100,6 +121,11 @@ public class FileUtils {
         return false;
     }
 
+    /**
+     * Deserializes/loads a specific mrvn message file
+     * @param messageName - the name of the mrvn message we want to load
+     * @return the MRVNMessage object we loaded
+     */
     public static MRVNMessage deserializeMRVNMessage(String messageName) {
 
         ObjectMapper mapper = new ObjectMapper();

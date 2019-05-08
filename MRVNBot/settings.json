@@ -12,14 +12,5 @@
   "MESSAGE_LINE_LIMIT" : 5,
   "MESSAGE_CHARACTER_LIMIT" : 150,
   "LIST_OTHER_USERS" : true,
-  "MESSAGE_COMPACT" : true,
-  "MYSQL_ENABLED" : false,
-  "MYSQL_INFO" : {
-    "dbPort" : "3306",
-    "dbName" : "",
-    "dbUser" : "",
-    "dbHost" : "",
-    "dbPassword" : "",
-    "dbTableName" : ""
-  }
+  "MESSAGE_COMPACT" : true
 }

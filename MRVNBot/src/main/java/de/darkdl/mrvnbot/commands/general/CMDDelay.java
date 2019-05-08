@@ -33,7 +33,7 @@ public class CMDDelay implements Command{
         delayAvg = delayAvg / delays.length;
         if (delayAvg >= 1000 || ping >= 250) {
             eb.setColor(Color.RED);
-        } else if (delayAvg <= 500 && ping <= 150) {
+        } else if (delayAvg <= 500 && ping <= 200) {
             eb.setColor(Color.GREEN);
         }
         

@@ -26,6 +26,7 @@ public class CMDVersion implements Command{
                 + "\n**Latest Stable Version:** " + Core.getLatestStableVersion());
         
         Core.sendMessageToChannel(eb.build(), evt.getChannel());
+        Core.outLFGInfo(evt.getAuthor(), "Requested bot version");
     }
     
 }

@@ -22,45 +22,19 @@ import net.dv8tion.jda.core.exceptions.RateLimitedException;
  */
 public class LFGHandler {
 
-//    private static final HashMap<String, String> CONNECTED_USERS = new HashMap<String, String>();
-
     public static final long[] MESSAGE_DELAY = new long[5];
     private static int CURRENT_POS = 0;
 
-    /**
-     * Adds or overwrites the users current voice channel
-     *
-     * @param userID - The snowflake of the user for which the association is to
-     * be added or overwritten
-     * @param channelID - The snowflake of the channel the user is in
-     */
-    public static void userConnected(String userID, String channelID) {
-//        if (Core.VARS.MYSQL_ENABLED) {
-//            Core.dbUserConnected(userID, channelID);
-//        } else {
-//            CONNECTED_USERS.put(userID, channelID);
-//        }
-    }
-
-    /**
-     * Removes a user and its association from the Map
-     *
-     * @param userID - The user that is to be removed
-     */
-    public static void userDisconnected(String userID) {
-//        if (Core.VARS.MYSQL_ENABLED) {
-//            Core.dbUserDisconnected(userID);
-//        } else {
-//            CONNECTED_USERS.remove(userID);
-//        }
-    }
-
     public static VoiceChannel getChannelForUserID(String userID) {
-//        if (Core.VARS.MYSQL_ENABLED) {
-//            return Core.bot.getVoiceChannelById(Core.dbGetChannel(userID));
-//        } else {
-//            return Core.bot.getVoiceChannelById(CONNECTED_USERS.getOrDefault(userID, "999999999999999999"));
-//        }
+        
+        Member m = Core.getMemberForID(userID);
+        if (m == null) {
+            Core.outError("Error retrieving the user for the specified ID " + userID, null);
+            return null;
+        } 
+        
+        return m.getVoiceState().getChannel();
+        
     }
 
     /**
@@ -94,7 +68,6 @@ public class LFGHandler {
 
                     msgContent = msgContent.replaceFirst("(?i)" + Core.VARS.LFG_COMMAND_IDENTIFIER, "");
                     if (msgContent.length() <= Core.VARS.MESSAGE_CHARACTER_LIMIT && getNewLines(msgContent) <= Core.VARS.MESSAGE_LINE_LIMIT) {
-                        System.out.println(msgContent.length() + " | " + Core.VARS.MESSAGE_CHARACTER_LIMIT);
 
                         try {
 
@@ -115,6 +88,9 @@ public class LFGHandler {
 
                             MESSAGE_DELAY[CURRENT_POS] = System.currentTimeMillis() - startTime;
                             CURRENT_POS++;
+                            if (CURRENT_POS >= 5) {
+                                CURRENT_POS = 0;
+                            }
 
                         } catch (RateLimitedException ex) {
                             Core.outError(ex.getMessage(), ex);
@@ -142,27 +118,13 @@ public class LFGHandler {
     }
 
     /**
-     * Used to load all the visible Channels and its members into the Map on
-     * startup
-     *
-     * @param channels - A list of all channels to be loaded
+     * Handles all of the things we need for creating the message to put in the LFG channel
+     * @param vc - The voice chat the requestor is in
+     * @param user - The requestors UserID
+     * @param message - The message we should post
+     * @return The finished message
+     * @throws RateLimitedException - If we are exceeding a limit, which should not happen due to the scheduler
      */
-//    static void loadVoiceChannels() {
-//
-//        List<VoiceChannel> channels = bot.getVoiceChannels();
-//        
-//        for (VoiceChannel channel : channels) {
-//            List<Member> members = channel.getMembers();
-//            for (Member m : members) {
-//                userConnected(m.getUser().getId(), channel.getId());
-//            }
-//        }
-//        
-//        channels = null;
-//        outInfo("Done scanning!");
-//
-//    }
-
     private static String handleMessageCreation(VoiceChannel vc, User user, String message) throws RateLimitedException {
 
         String channelInfo;
@@ -219,6 +181,12 @@ public class LFGHandler {
         return channelInfo;
     }
 
+    /**
+     * Gets an invite for the Voice Channel or creates one if none exist
+     * @param vc - The Voice Channel for which we want the invite
+     * @param user - The User that requested the invite to be sent
+     * @return an Invite object for the specified channel
+     */
     public static Invite createInvite(VoiceChannel vc, User user) {
         try {
 
@@ -236,8 +204,13 @@ public class LFGHandler {
         return null;
     }
 
-    public static VoiceChannel whereIsUser(String arg) {
-        VoiceChannel vc = getChannelForUserID(arg);
+    /**
+     * Retrieves the VoiceChannel the specified user is in
+     * @param userID - the ID of the User we want to know the location of
+     * @return The VoiceChannel object the user is in 
+     */
+    public static VoiceChannel whereIsUser(String userID) {
+        VoiceChannel vc = getChannelForUserID(userID);
         if (vc != null) {
             return vc;
         } else {
@@ -245,6 +218,11 @@ public class LFGHandler {
         }
     }
 
+    /**
+     * Checks how many Newlines a message has
+     * @param msgContent - the content of the message we want to check the newlines of
+     * @return an int with the amount of newlines
+     */
     private static int getNewLines(String msgContent) {
         String[] lines = msgContent.split("\r\n|\r|\n");
         return lines.length;

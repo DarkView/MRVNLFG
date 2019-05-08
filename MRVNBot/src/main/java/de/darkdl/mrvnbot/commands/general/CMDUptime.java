@@ -34,6 +34,7 @@ public class CMDUptime implements Command {
         eb.setDescription(uptimeFormatted);
         
         Core.sendMessageToChannel(eb.build(), evt.getChannel());
+        Core.outLFGInfo(evt.getAuthor(), "Requested bot uptime");
     }
 
 }
