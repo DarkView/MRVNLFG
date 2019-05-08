@@ -13,11 +13,11 @@ import net.dv8tion.jda.core.entities.User;
  */
 public class NotifyInfo {
     
-    private User modUser;
-    private String userID;
-    private long endTime;
+    private final User modUser;
+    private final String userID;
+    private final long endTime;
     
-    private int id;
+    private final int id;
     private static int nextId;
 
     public NotifyInfo(User modUser, String userID, long endTime) {

@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package de.darkdl.mrvnbot.commands;
+package de.darkdl.mrvnbot.commands.general;
 
 import de.darkdl.mrvnbot.Core;
 import java.awt.Color;

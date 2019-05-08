@@ -5,9 +5,6 @@
  */
 package de.darkdl.mrvnbot;
 
-import static de.darkdl.mrvnbot.Core.bot;
-import static de.darkdl.mrvnbot.Core.outInfo;
-import java.util.HashMap;
 import java.util.List;
 import java.util.regex.Pattern;
 import net.dv8tion.jda.core.entities.Invite;
@@ -25,7 +22,7 @@ import net.dv8tion.jda.core.exceptions.RateLimitedException;
  */
 public class LFGHandler {
 
-    private static final HashMap<String, String> CONNECTED_USERS = new HashMap<String, String>();
+//    private static final HashMap<String, String> CONNECTED_USERS = new HashMap<String, String>();
 
     public static final long[] MESSAGE_DELAY = new long[5];
     private static int CURRENT_POS = 0;
@@ -38,11 +35,11 @@ public class LFGHandler {
      * @param channelID - The snowflake of the channel the user is in
      */
     public static void userConnected(String userID, String channelID) {
-        if (Core.VARS.MYSQL_ENABLED) {
-            Core.dbUserConnected(userID, channelID);
-        } else {
-            CONNECTED_USERS.put(userID, channelID);
-        }
+//        if (Core.VARS.MYSQL_ENABLED) {
+//            Core.dbUserConnected(userID, channelID);
+//        } else {
+//            CONNECTED_USERS.put(userID, channelID);
+//        }
     }
 
     /**
@@ -51,19 +48,19 @@ public class LFGHandler {
      * @param userID - The user that is to be removed
      */
     public static void userDisconnected(String userID) {
-        if (Core.VARS.MYSQL_ENABLED) {
-            Core.dbUserDisconnected(userID);
-        } else {
-            CONNECTED_USERS.remove(userID);
-        }
+//        if (Core.VARS.MYSQL_ENABLED) {
+//            Core.dbUserDisconnected(userID);
+//        } else {
+//            CONNECTED_USERS.remove(userID);
+//        }
     }
 
     public static VoiceChannel getChannelForUserID(String userID) {
-        if (Core.VARS.MYSQL_ENABLED) {
-            return Core.bot.getVoiceChannelById(Core.dbGetChannel(userID));
-        } else {
-            return Core.bot.getVoiceChannelById(CONNECTED_USERS.getOrDefault(userID, "999999999999999999"));
-        }
+//        if (Core.VARS.MYSQL_ENABLED) {
+//            return Core.bot.getVoiceChannelById(Core.dbGetChannel(userID));
+//        } else {
+//            return Core.bot.getVoiceChannelById(CONNECTED_USERS.getOrDefault(userID, "999999999999999999"));
+//        }
     }
 
     /**
@@ -118,18 +115,6 @@ public class LFGHandler {
 
                             MESSAGE_DELAY[CURRENT_POS] = System.currentTimeMillis() - startTime;
                             CURRENT_POS++;
-                            if (CURRENT_POS >= 5) {
-                                CURRENT_POS = 0;
-                                long avg = 0;
-                                for (int i = 0; i < MESSAGE_DELAY.length; i++) {
-                                    avg += MESSAGE_DELAY[i];
-                                }
-                                avg = avg / MESSAGE_DELAY.length;
-                                if (avg >= 1000) {
-                                    Core.outInfoChannel("**I am currently experiencing extremely high delays! " + avg +"ms\n"
-                                            + "Please forward this information to the Admins/Owners!**");
-                                }
-                            }
 
                         } catch (RateLimitedException ex) {
                             Core.outError(ex.getMessage(), ex);
@@ -162,21 +147,21 @@ public class LFGHandler {
      *
      * @param channels - A list of all channels to be loaded
      */
-    static void loadVoiceChannels() {
-
-        List<VoiceChannel> channels = bot.getVoiceChannels();
-        
-        for (VoiceChannel channel : channels) {
-            List<Member> members = channel.getMembers();
-            for (Member m : members) {
-                userConnected(m.getUser().getId(), channel.getId());
-            }
-        }
-        
-        channels = null;
-        outInfo("Done scanning!");
-
-    }
+//    static void loadVoiceChannels() {
+//
+//        List<VoiceChannel> channels = bot.getVoiceChannels();
+//        
+//        for (VoiceChannel channel : channels) {
+//            List<Member> members = channel.getMembers();
+//            for (Member m : members) {
+//                userConnected(m.getUser().getId(), channel.getId());
+//            }
+//        }
+//        
+//        channels = null;
+//        outInfo("Done scanning!");
+//
+//    }
 
     private static String handleMessageCreation(VoiceChannel vc, User user, String message) throws RateLimitedException {
 

@@ -7,20 +7,20 @@ package de.darkdl.mrvnbot;
 
 import de.darkdl.mrvnbot.utils.FileUtils;
 import de.darkdl.mrvnbot.utils.Vars;
-import de.darkdl.mrvnbot.Listeners.MessageListener;
-import de.darkdl.mrvnbot.Listeners.VoiceListener;
-import de.darkdl.mrvnbot.commands.CMDAddBlocked;
-import de.darkdl.mrvnbot.commands.CMDDelay;
-import de.darkdl.mrvnbot.commands.CMDListBlocked;
-import de.darkdl.mrvnbot.commands.CMDListVars;
-import de.darkdl.mrvnbot.commands.CMDMessage;
-import de.darkdl.mrvnbot.commands.CMDNotify;
-import de.darkdl.mrvnbot.commands.CMDReload;
-import de.darkdl.mrvnbot.commands.CMDRemoveBlocked;
-import de.darkdl.mrvnbot.commands.CMDUpdateVar;
-import de.darkdl.mrvnbot.commands.CMDUptime;
-import de.darkdl.mrvnbot.commands.CMDVersion;
-import de.darkdl.mrvnbot.commands.CMDWhere;
+import de.darkdl.mrvnbot.listeners.MessageListener;
+import de.darkdl.mrvnbot.listeners.VoiceListener;
+import de.darkdl.mrvnbot.commands.wordfilter.CMDAddBlocked;
+import de.darkdl.mrvnbot.commands.general.CMDDelay;
+import de.darkdl.mrvnbot.commands.wordfilter.CMDListBlocked;
+import de.darkdl.mrvnbot.commands.moderation.CMDListVars;
+import de.darkdl.mrvnbot.commands.moderation.CMDMessage;
+import de.darkdl.mrvnbot.commands.moderation.CMDNotify;
+import de.darkdl.mrvnbot.commands.general.CMDReload;
+import de.darkdl.mrvnbot.commands.wordfilter.CMDRemoveBlocked;
+import de.darkdl.mrvnbot.commands.moderation.CMDUpdateVar;
+import de.darkdl.mrvnbot.commands.general.CMDUptime;
+import de.darkdl.mrvnbot.commands.general.CMDVersion;
+import de.darkdl.mrvnbot.commands.moderation.CMDWhere;
 import de.darkdl.mrvnbot.utils.CommandHandler;
 import de.darkdl.mrvnbot.utils.MRVNMessage;
 import java.util.ArrayList;
@@ -69,7 +69,7 @@ public class Core {
 
         VARS = FileUtils.deserializeVars();
         VARS.allToLowerCase();
-        VARS.initSQL();
+//        VARS.initSQL();
         outInfo("Loaded the config");
 
         BLOCKED_WORDS = FileUtils.deserializeBlocked();
@@ -80,10 +80,10 @@ public class Core {
             System.exit(0);
         }
         
-        if (VARS.MYSQL_ENABLED) {
-            outInfo("We are in MySQL mode, connecting...");
-            conn = new Connector();
-        }
+//        if (VARS.MYSQL_ENABLED) {
+//            outInfo("We are in MySQL mode, connecting...");
+//            conn = new Connector();
+//        }
         
         builder = new JDABuilder(AccountType.BOT);
 
@@ -92,20 +92,18 @@ public class Core {
         builder.setContextEnabled(true);
         builder.setGame(Game.playing(VARS.LFG_COMMAND_IDENTIFIER));
 
-        outInfo("Scanning all voice-channels known...");
+//        outInfo("Scanning all voice-channels known...");
         bot = builder.buildBlocking();
         
         if (!VARS.INFO_CHANNEL_ID.equals("")) {
             infoChannel = bot.getTextChannelById(VARS.INFO_CHANNEL_ID);
         }
-        outInfoChannel("Loading... Scanning all voice-channels");
         
-        LFGHandler.loadVoiceChannels();
+//        LFGHandler.loadVoiceChannels();
         addListeners();
         addCommands();
 
         outInfo("Done loading! [Took " + (System.currentTimeMillis() - bootTime) + "ms]");
-        outInfoChannel("Done loading!");
         java.lang.System.gc();
     }
 
@@ -281,16 +279,16 @@ public class Core {
         return "Error";
     }
 
-    public static void newMessage(String title) {
+    public static void newMRVNMessage(String title) {
         currentMessage = new MRVNMessage();
         currentMessage.setTitle(title);
     }
 
-    public static void loadMessage(String toLoad) {
+    public static void loadMRVNMessage(String toLoad) {
         currentMessage = FileUtils.deserializeMRVNMessage(toLoad);
     }
 
-    public static void setChannels(String[] args) {
+    public static void setMRVNMessageChannels(String[] args) {
         Map<String, String> channels = new HashMap<>();
 
         for (int i = 1; i < args.length; i++) {
@@ -309,7 +307,7 @@ public class Core {
         currentMessage.setChannelAndMessageIDs(channels);
     }
 
-    public static void addChannels(String[] args) {
+    public static void addMRVNMessageChannels(String[] args) {
         Map<String, String> channels = currentMessage.getChannelAndMessageIDs();
 
         for (int i = 1; i < args.length; i++) {
@@ -328,7 +326,7 @@ public class Core {
         currentMessage.setChannelAndMessageIDs(channels);
     }
 
-    public static void setMessage(String[] args) {
+    public static void setMRVNMessageMessage(String[] args) {
         StringBuilder sb = new StringBuilder();
 
         for (int i = 1; i < args.length; i++) {
@@ -338,7 +336,7 @@ public class Core {
         currentMessage.setMessage(sb.toString());
     }
 
-    public static void postMessage() {
+    public static void postMRVNMessageMessage() {
         Map<String, String> channelAndMessageIDs = currentMessage.getChannelAndMessageIDs();
         Set<String> keySet = channelAndMessageIDs.keySet();
         boolean toPin = currentMessage.isPin();
@@ -386,39 +384,33 @@ public class Core {
         currentMessage.setChannelAndMessageIDs(newIDs);
     }
 
-    public static void saveMessage() {
+    public static void saveMRVNMessage() {
         FileUtils.serializeMRVNMessage(currentMessage);
     }
 
     public static void postMRVNMessageInfo(MessageChannel channel) {
         sendMessageToChannel(currentMessage.toString(), channel);
     }
-    
-    public static void outInfoChannel(String s) {
-        //if (infoChannel != null) {
-        //    infoChannel.sendMessage(s).queue();
-        //}
-    }
 
-    public static boolean setPin(boolean b) {
+    public static boolean setMRVNMessagePin(boolean b) {
         currentMessage.setPin(b);
         return b;
     }
 
-    public static void unloadMessage() {
+    public static void unloadMRVNMessage() {
         currentMessage = new MRVNMessage();
     }
 
-    public static void dbUserConnected(String userID, String channelID) {
-        conn.userConnected(userID, channelID);
-    }
-
-    public static void dbUserDisconnected(String userID) {
-        conn.userDiconnected(userID);
-    }
-
-    static String dbGetChannel(String userID) {
-        return conn.getChannel(userID);
-    }
+//    public static void dbUserConnected(String userID, String channelID) {
+//        conn.userConnected(userID, channelID);
+//    }
+//
+//    public static void dbUserDisconnected(String userID) {
+//        conn.userDiconnected(userID);
+//    }
+//
+//    static String dbGetChannel(String userID) {
+//        return conn.getChannel(userID);
+//    }
     
 }

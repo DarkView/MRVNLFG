@@ -5,7 +5,7 @@
  */
 package de.darkdl.mrvnbot.utils;
 
-import de.darkdl.mrvnbot.commands.Command;
+import de.darkdl.mrvnbot.commands.general.Command;
 import java.util.HashMap;
 
 /**

@@ -3,10 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package de.darkdl.mrvnbot.commands;
+package de.darkdl.mrvnbot.commands.moderation;
 
+import de.darkdl.mrvnbot.commands.general.Command;
 import de.darkdl.mrvnbot.Core;
-import de.darkdl.mrvnbot.Listeners.VoiceListener;
+import de.darkdl.mrvnbot.listeners.VoiceListener;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 
 /**
@@ -33,9 +34,9 @@ public class CMDNotify implements Command {
         } else if (args.length == 1 && args[0].startsWith("l")) {
 
             Core.sendMessageToChannel(VoiceListener.listNotifies(), evt.getChannel());
-            
+
         } else {
-            
+
             VoiceListener.removeNotifiesForMod(evt.getAuthor());
             Core.sendMessageToChannel("I have cleared all of your notifications.", evt.getChannel());
 

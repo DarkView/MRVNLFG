@@ -3,8 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package de.darkdl.mrvnbot.commands;
+package de.darkdl.mrvnbot.commands.moderation;
 
+import de.darkdl.mrvnbot.commands.general.Command;
 import de.darkdl.mrvnbot.Core;
 import de.darkdl.mrvnbot.LFGHandler;
 import net.dv8tion.jda.core.entities.MessageChannel;

@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package de.darkdl.mrvnbot.Listeners;
+package de.darkdl.mrvnbot.listeners;
 
 import de.darkdl.mrvnbot.utils.CommandHandler;
 import de.darkdl.mrvnbot.utils.CommandParser;

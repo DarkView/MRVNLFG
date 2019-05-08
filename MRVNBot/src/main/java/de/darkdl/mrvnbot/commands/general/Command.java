@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package de.darkdl.mrvnbot.commands;
+package de.darkdl.mrvnbot.commands.general;
 
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 

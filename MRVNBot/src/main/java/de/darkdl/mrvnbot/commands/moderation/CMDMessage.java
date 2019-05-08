@@ -3,8 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package de.darkdl.mrvnbot.commands;
+package de.darkdl.mrvnbot.commands.moderation;
 
+import de.darkdl.mrvnbot.commands.general.Command;
 import de.darkdl.mrvnbot.Core;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 
@@ -25,43 +26,43 @@ public class CMDMessage implements Command {
         try {
             switch (args[0]) {
                 case "create":
-                    Core.newMessage(args[1]);
+                    Core.newMRVNMessage(args[1]);
                     status = "Message created.";
                     break;
                 case "load":
                     save = false;
-                    Core.loadMessage(args[1]);
+                    Core.loadMRVNMessage(args[1]);
                     status = "Message loaded.";
                     break;
                 case "unload":
                     save = false;
-                    Core.unloadMessage();
+                    Core.unloadMRVNMessage();
                     status = "Message unloaded.";
                     break;
                 case "setchannels":
-                    Core.setChannels(args);
+                    Core.setMRVNMessageChannels(args);
                     status = "Channels resolved and set.";
                     break;
                 case "addchannels":
-                    Core.addChannels(args);
+                    Core.addMRVNMessageChannels(args);
                     status = "Channels resolved and added.";
                     break;
                 case "setmessage":
-                    Core.setMessage(args);
+                    Core.setMRVNMessageMessage(args);
                     status = "Message set.";
                     break;
                 case "setpin":
-                    boolean pinStatus = Core.setPin((args[1].equals("t") || args[1].equals("true")) || args[1].equals("1"));
+                    boolean pinStatus = Core.setMRVNMessagePin((args[1].equals("t") || args[1].equals("true")) || args[1].equals("1"));
                     status = "Pin status set to " + String.valueOf(pinStatus) + ".";
                     break;
                 case "post":
                     evt.getChannel().sendTyping().complete();
-                    Core.postMessage();
+                    Core.postMRVNMessageMessage();
                     status = "Message posted/edited in all channels.";
                     break;
                 case "edit":
                     evt.getChannel().sendTyping().complete();
-                    Core.postMessage();
+                    Core.postMRVNMessageMessage();
                     status = "Message posted/edited in all channels.";
                     break;
                 case "delete":
@@ -88,7 +89,7 @@ public class CMDMessage implements Command {
             Core.outLFGInfo(evt.getAuthor(), "Message: Executed " + args[0]);
         }
         if (save) {
-            Core.saveMessage();
+            Core.saveMRVNMessage();
         }
 
     }

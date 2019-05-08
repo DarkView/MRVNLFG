@@ -33,8 +33,8 @@ public class Vars {
     public int MESSAGE_CHARACTER_LIMIT = 150;
     public boolean LIST_OTHER_USERS = true;
     public boolean MESSAGE_COMPACT = false;
-    public boolean MYSQL_ENABLED = false;
-    public Map<String, String> MYSQL_INFO;
+//    public boolean MYSQL_ENABLED = false;
+//    public Map<String, String> MYSQL_INFO;
 
     public void allToLowerCase() {
         LFG_VOICE_IDENTIFIER = LFG_VOICE_IDENTIFIER.toLowerCase();
@@ -42,23 +42,23 @@ public class Vars {
         LFG_COMMAND_IDENTIFIER = LFG_COMMAND_IDENTIFIER.toLowerCase();
     }
 
-    public void initSQL() {
-
-        if (!MYSQL_INFO.containsKey("dbHost")) {
-            
-            Map<String, String> map = new HashMap<>();
-            map.put("dbHost", "mysql-db-url");
-            map.put("dbPort", "3306");
-            map.put("dbName", "mysql-db-name");
-            map.put("dbUser", "mysql-user-name");
-            map.put("dbPassword", "mysql-db-pw");
-            map.put("dbTableName", "mysql-table-name");
-            MYSQL_INFO = map;
-            Core.saveVars();
-            
-        }
-
-    }
+//    public void initSQL() {
+//
+//        if (!MYSQL_INFO.containsKey("dbHost")) {
+//            
+//            Map<String, String> map = new HashMap<>();
+//            map.put("dbHost", "mysql-db-url");
+//            map.put("dbPort", "3306");
+//            map.put("dbName", "mysql-db-name");
+//            map.put("dbUser", "mysql-user-name");
+//            map.put("dbPassword", "mysql-db-pw");
+//            map.put("dbTableName", "mysql-table-name");
+//            MYSQL_INFO = map;
+//            Core.saveVars();
+//            
+//        }
+//
+//    }
 
     public boolean isOwner(String userID) {
         return OWNER_IDS.contains(userID);
@@ -70,10 +70,8 @@ public class Vars {
 
     public boolean isMod(Member m) {
         List<Role> roles = m.getRoles();
-        for (Role role : roles) {
-            if (role.getId().equals(MOD_ROLE_ID)) {
-                return true;
-            }
+        if (roles.stream().anyMatch((role) -> (role.getId().equals(MOD_ROLE_ID)))) {
+            return true;
         }
         return isOwner(m.getUser().getId());
     }

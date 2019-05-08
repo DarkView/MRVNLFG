@@ -3,11 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package de.darkdl.mrvnbot.Listeners;
+package de.darkdl.mrvnbot.listeners;
 
 import de.darkdl.mrvnbot.Core;
 import de.darkdl.mrvnbot.LFGHandler;
-import de.darkdl.mrvnbot.commands.CMDWhere;
+import de.darkdl.mrvnbot.commands.moderation.CMDWhere;
 import de.darkdl.mrvnbot.utils.NotifyInfo;
 import java.util.ArrayList;
 import java.util.Timer;
@@ -27,9 +27,9 @@ import net.dv8tion.jda.core.hooks.ListenerAdapter;
 public class VoiceListener extends ListenerAdapter {
 
     private static ArrayList<NotifyInfo> activeNotifies = new ArrayList<>();
-    private static Timer timer = new Timer("MRVN-NotifTimer");
+    private static final Timer TIMER = new Timer("MRVN-NotifTimer");
 
-    private static String SEPARATOR = " - ";
+    private static final String SEPARATOR = " - ";
 
     /**
      * Calls for an overwrite/add of the user and his channel if it matches the
@@ -80,7 +80,7 @@ public class VoiceListener extends ListenerAdapter {
         NotifyInfo newNotif = new NotifyInfo(modUser, userID, System.currentTimeMillis() + (expire * 1000));
         activeNotifies.add(newNotif);
 
-        timer.schedule(new TimerTask() {
+        TIMER.schedule(new TimerTask() {
             @Override
             public void run() {
                 if (removeNotifiesForNotifID(newNotif.getId())) {
@@ -88,7 +88,7 @@ public class VoiceListener extends ListenerAdapter {
                 }
             }
         }, expire * 1000);
-        timer.purge();
+        TIMER.purge();
 
         Core.outLFGInfo(modUser, "Executed notify for " + userID + " for " + expire + " seconds");
     }
