@@ -78,7 +78,7 @@ public class Core {
             outInfo("There is no token in the settings.json! Stopping...");
             System.exit(0);
         }
-        
+
         builder = new JDABuilder(AccountType.BOT);
 
         builder.setToken(VARS.TOKEN);
@@ -90,7 +90,7 @@ public class Core {
         if (!VARS.INFO_CHANNEL_ID.equals("")) {
             infoChannel = bot.getTextChannelById(VARS.INFO_CHANNEL_ID);
         }
-        
+
         addListeners();
         addCommands();
 
@@ -230,6 +230,7 @@ public class Core {
 
     /**
      * Retrieves the currently loaded list of blocked words/regexs
+     *
      * @return a List with all the blocke words/regexes
      */
     public static List<String> getBlockedWords() {
@@ -238,6 +239,7 @@ public class Core {
 
     /**
      * Adds a blocked word/regex to the filter and saves it
+     *
      * @param regex - the (optionally regex) term to add to the block list
      */
     public static void addBlockedWord(String regex) {
@@ -247,7 +249,9 @@ public class Core {
 
     /**
      * Removes a blocked word/regex from the filter and saves it
-     * @param toRemove - the exact term/word/regex to remove, no deviance permitted
+     *
+     * @param toRemove - the exact term/word/regex to remove, no deviance
+     * permitted
      * @return true if removed successfully
      */
     public static boolean removeBlockedWord(String toRemove) {
@@ -264,8 +268,8 @@ public class Core {
     }
 
     /**
-     * Creates the blocked words file if it doesnt exist
-     * With "(?i)n[il1]gg(er|a|@)" as a default regex
+     * Creates the blocked words file if it doesnt exist With
+     * "(?i)n[il1]gg(er|a|@)" as a default regex
      */
     public static void createBlockedFile() {
         BLOCKED_WORDS = new ArrayList<>();
@@ -282,6 +286,7 @@ public class Core {
 
     /**
      * Gets the delay for the bots last hearbeat
+     *
      * @return - the delay of the bots last heartbeat
      */
     public static long getPing() {
@@ -289,7 +294,9 @@ public class Core {
     }
 
     /**
-     * Queries githubs API to retreive the latest (non-pre-release) version number
+     * Queries githubs API to retreive the latest (non-pre-release) version
+     * number
+     *
      * @return - a String with the latest version number
      */
     public static String getLatestStableVersion() {
@@ -312,6 +319,7 @@ public class Core {
 
     /**
      * Creates a new MRVN Message
+     *
      * @param title - The messages title (filename)
      */
     public static void newMRVNMessage(String title) {
@@ -321,6 +329,7 @@ public class Core {
 
     /**
      * Loads an existing MRVN Message
+     *
      * @param toLoad - The title of the message to load
      */
     public static void loadMRVNMessage(String toLoad) {
@@ -328,8 +337,9 @@ public class Core {
     }
 
     /**
-     * Sets (overrides) the channels the message will be posted to
-     * Putting a "c" in front of the ID tells the bot to resolve a category ID to channel IDs
+     * Sets (overrides) the channels the message will be posted to Putting a "c"
+     * in front of the ID tells the bot to resolve a category ID to channel IDs
+     *
      * @param args - The channel IDs of the channels to send to
      */
     public static void setMRVNMessageChannels(String[] args) {
@@ -353,6 +363,7 @@ public class Core {
 
     /**
      * Adds (does NOT override) channels the message will be posted to
+     *
      * @param args - the channels or categorys to add
      */
     public static void addMRVNMessageChannels(String[] args) {
@@ -376,6 +387,7 @@ public class Core {
 
     /**
      * Sets the message that will be posted
+     *
      * @param args - The message
      */
     public static void setMRVNMessageMessage(String[] args) {
@@ -427,7 +439,7 @@ public class Core {
     }
 
     /**
-     * Deletes the message from all channels 
+     * Deletes the message from all channels
      */
     public static void deleteMrvnMessage() {
         Map<String, String> channelAndMessageIDs = currentMessage.getChannelAndMessageIDs();
@@ -451,6 +463,7 @@ public class Core {
 
     /**
      * Displays all the information of the current message
+     *
      * @param channel - the channel to post it to
      */
     public static void postMRVNMessageInfo(MessageChannel channel) {
@@ -459,6 +472,7 @@ public class Core {
 
     /**
      * Sets whether or not the message should be pinned
+     *
      * @param b - true if yes
      * @return param b
      */
@@ -473,14 +487,20 @@ public class Core {
     public static void unloadMRVNMessage() {
         currentMessage = new MRVNMessage();
     }
-    
+
     /**
-     * Returns the Member object for the specified userID (if we have a mutual guild)
+     * Returns the Member object for the specified userID (if we have a mutual
+     * guild)
+     *
      * @param userID - The userID we want to get the Member object of
      * @return the member object
      */
     public static Member getMemberForID(String userID) {
-        return bot.getUserById(userID).getMutualGuilds().get(0).getMemberById(userID);
+        if (userID.matches("^[0-9]+$")) {
+            return bot.getUserById(userID).getMutualGuilds().get(0).getMemberById(userID);
+        } else {
+            return null;
+        }
     }
-    
+
 }
